@@ -1,0 +1,113 @@
+$grey: #eee;
+$medgrey: #aaa;
+$darkgrey: #999;
+$black:#000;
+
+$ionicons-font-path: "~ionicons-npm/fonts";
+@import "~ionicons-npm/scss/ionicons.scss";
+
+[data-sfb-section] {
+    position:relative;
+}
+
+.sfb-overlay {
+    // position:absolute;
+    // top:10px;
+    // left:10px;
+    width:0;
+    height:0;
+    display:none;
+    z-index:100;
+
+    [data-sfb-section]:hover & {
+        display:block;
+    }
+
+    span {
+        display:block;
+        position:absolute;
+    }
+
+    span:nth-child(1) {
+        border-top:1px solid $grey;
+        top:10px;
+        left:10px;
+        right:10px;
+        height:0;
+    }
+    span:nth-child(2) {
+        border-top:1px solid $grey;
+        bottom:10px;
+        left:10px;
+        right:10px;
+        height:0;
+    }
+    span:nth-child(3) {
+        border-left:1px solid $grey;
+        top:10px;
+        left:10px;
+        bottom:10px;
+        width:0;
+    }
+    span:nth-child(4) {
+        border-left:1px solid $grey;
+        top:10px;
+        right:10px;
+        bottom:10px;
+        width:0;
+    }
+}
+
+.sfb-tools {
+    position:absolute;
+    display:none;
+    top:20px;
+    left:20px;
+    // z-index:10;
+    list-style-type:none;
+    padding:0;
+    margin:0;
+    border-radius:3px;
+    overflow:hidden;
+    z-index:101;
+
+    [data-sfb-section]:hover & {
+        display:block;
+    }
+
+    > li {
+        background-color:$grey;
+        display:block;
+        float:left;
+        width:30px;
+        height:30px;
+        text-align:center;
+        font-size:24px;
+        padding-top:3px;
+        color:$darkgrey;
+
+        &:hover {
+            color:$black;
+            background-color:$medgrey;
+        }
+
+        &.sfb-tools_handle {
+            cursor:move;
+            font-size:30px;
+            padding-top:0;
+            @extend .ion-navicon;
+        }
+        &.sfb-tools_edit {
+            cursor:pointer;
+            @extend .ion-gear-b;
+        }
+        &.sfb-tools_trash {
+            cursor:pointer;
+            @extend .ion-trash-b;
+        }
+        &.sfb-tools_show {
+            cursor:pointer;
+            @extend .ion-eye;
+        }
+    }
+}
