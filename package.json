@@ -1,6 +1,6 @@
 {
-  "name": "adiwidjaja/frontend-builder",
-  "version": "0.1",
+  "name": "silverstripe-frontend-builder",
+  "version": "0.1.1",
   "main": "js/sfb.js",
   "author": "Andy Adiwidjaja <mail@adiwidjaja.com>",
   "license": "MIT",
@@ -12,16 +12,15 @@
     "exports-loader": "^0.6.4",
     "extract-text-webpack-plugin": "^1.0.1",
     "file-loader": "^0.8.5",
+    "frontend-pagebuilder": "git@github.com:adiwidjaja/frontend-pagebuilder.git",
     "imports-loader": "^0.6.5",
+    "jshint": "^2.9.5",
+    "jshint-loader": "^0.8.4",
     "node-sass": "^3.7.0",
     "sass-loader": "^3.2.0",
     "style-loader": "^0.13.1",
     "webpack": "^1.13.0",
     "webpack-dev-server": "^1.14.1"
   },
-  "dependencies": {
-    "ionicons-npm": "^2.0.1",
-    "sortablejs": "^1.6.1",
-    "tinymce": "^4.6.5"
-  }
+  "dependencies": {}
 }

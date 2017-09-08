@@ -16,6 +16,12 @@ module.exports = {
     },
     devtool: 'source-map',
     module: {
+        preLoaders: [{
+          test: /\.js$/, 
+          exclude: /node_modules/,
+          loader: 'jshint-loader',
+          esversion: 6
+        }],
         loaders: [
             {
                 test: /\.scss|\.css$/,
@@ -31,9 +37,11 @@ module.exports = {
                 loader: "file-loader?name=fonts/[name].[ext]&context=./something",
             },
             {
-                test: /\.js|\.jsx$/,
-                loaders: ['babel?presets[]=es2015'],
-                exclude: /node_modules/,
+                test: /\.js$/,
+                loader: 'babel-loader',
+                query: {
+                    presets: ['es2015']
+                }
             }
           //   ,
           // {

@@ -53,15 +53,41 @@
 
 	"use strict";
 	
-	var _sortablejs = __webpack_require__(2);
+	var _frontendPagebuilder = __webpack_require__(2);
+	
+	var _frontendPagebuilder2 = _interopRequireDefault(_frontendPagebuilder);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	__webpack_require__(10);
+	
+	
+	var fpb = new _frontendPagebuilder2.default();
+	fpb.init();
+
+/***/ }),
+/* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _sortablejs = __webpack_require__(3);
 	
 	var _sortablejs2 = _interopRequireDefault(_sortablejs);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	__webpack_require__(3);
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
-	var tinymce = window.tinymce;
+	__webpack_require__(4);
+	
+	var tinymce = window.tinymce; //BAD
 	
 	function ready(fn) {
 	    if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
@@ -78,68 +104,87 @@
 	    }
 	};
 	
-	tinymce.init({
-	    selector: '[data-sfb-valuetype="string"]',
-	    inline: true,
-	    toolbar: 'undo redo',
-	    menubar: false
-	});
+	var FrontendPageBuilder = function () {
+	    function FrontendPageBuilder() {
+	        _classCallCheck(this, FrontendPageBuilder);
+	    }
 	
-	tinymce.init({
-	    selector: '[data-sfb-valuetype="rich"]',
-	    inline: true,
-	    // toolbar: 'undo redo',
-	    menubar: false
-	});
-	
-	function serializeContent() {
-	    var areas = document.querySelectorAll("[data-sfb-content]");
-	    forEach(areas, function (i, area) {
-	        var data = [];
-	        var sections = area.querySelectorAll("[data-sfb-section]");
-	        forEach(sections, function (i, section) {
-	            var sectiondata = {};
-	            var fields = section.querySelectorAll("[data-sfb-value]");
-	            forEach(fields, function (i, field) {
-	                var name = field.getAttribute("data-sfb-value");
-	                var type = field.getAttribute("data-sfb-valuetype");
-	                var value = field.innerHTML;
-	                sectiondata[name] = value;
+	    _createClass(FrontendPageBuilder, [{
+	        key: "init",
+	        value: function init() {
+	            tinymce.init({
+	                selector: '[data-sfb-valuetype="string"]',
+	                inline: true,
+	                toolbar: 'undo redo',
+	                menubar: false
 	            });
-	            data.push(sectiondata);
-	        });
-	        console.log(JSON.stringify(data));
-	    });
-	}
 	
-	var buttonrow = '<ul class="sfb-tools"><li class="sfb-tools_handle"></li><li class="sfb-tools_edit"></li><li class="sfb-tools_trash"></li><li class="sfb-tools_show"></li></ul><div class="sfb-overlay"><span></span><span></span><span></span><span></span></div>';
+	            tinymce.init({
+	                selector: '[data-sfb-valuetype="rich"]',
+	                inline: true,
+	                // toolbar: 'undo redo',
+	                menubar: false
+	            });
 	
-	ready(function () {
+	            function serializeContent() {
+	                var areas = document.querySelectorAll("[data-sfb-content]");
+	                forEach(areas, function (i, area) {
+	                    var data = [];
+	                    var sections = area.querySelectorAll("[data-sfb-section]");
+	                    forEach(sections, function (i, section) {
+	                        var sectiondata = {};
+	                        var fields = section.querySelectorAll("[data-sfb-value]");
+	                        forEach(fields, function (i, field) {
+	                            var name = field.getAttribute("data-sfb-value");
+	                            var type = field.getAttribute("data-sfb-valuetype");
+	                            var value = field.innerHTML;
+	                            sectiondata[name] = value;
+	                        });
+	                        data.push(sectiondata);
+	                    });
+	                    console.log(JSON.stringify(data));
+	                });
+	            }
 	
-	    var areas = document.querySelectorAll("[data-sfb-content]");
-	    forEach(areas, function (i, area) {
-	        _sortablejs2.default.create(area, {
-	            animation: 150,
-	            // draggable: "[data-sfb-section]",
-	            handle: ".sfb-tools_handle"
-	        });
-	        var sections = area.querySelectorAll("[data-sfb-section]");
-	        forEach(sections, function (i, section) {
-	            section.insertAdjacentHTML('afterbegin', buttonrow);
-	            // section.classList.add("sfb-draggable");
-	        });
-	    });
+	            var buttonrow = '<ul class="sfb-tools"><li class="sfb-tools_handle"></li><li class="sfb-tools_edit"></li><li class="sfb-tools_trash"></li><li class="sfb-tools_show"></li></ul><div class="sfb-overlay"><span></span><span></span><span></span><span></span></div>';
 	
-	    document.getElementById("sfb-save").addEventListener("click", function (e) {
-	        serializeContent();
-	    });
-	});
+	            ready(function () {
+	
+	                var areas = document.querySelectorAll("[data-sfb-content]");
+	                forEach(areas, function (i, area) {
+	                    _sortablejs2.default.create(area, {
+	                        animation: 150,
+	                        // draggable: "[data-sfb-section]",
+	                        handle: ".sfb-tools_handle"
+	                    });
+	                    var sections = area.querySelectorAll("[data-sfb-section]");
+	                    forEach(sections, function (i, section) {
+	                        section.insertAdjacentHTML('afterbegin', buttonrow);
+	                        // section.classList.add("sfb-draggable");
+	                    });
+	                });
+	
+	                document.getElementById("sfb-save").addEventListener("click", function (e) {
+	                    serializeContent();
+	                });
+	            });
+	        }
+	    }]);
+	
+	    return FrontendPageBuilder;
+	}();
+	
+	exports.default = FrontendPageBuilder;
 
 /***/ }),
-/* 2 */
+/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/**!
+	var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;"use strict";
+	
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+	
+	/**!
 	 * Sortable
 	 * @author	RubaXa   <trash@rubaxa.org>
 	 * @license MIT
@@ -150,11 +195,9 @@
 	
 		if (true) {
 			!(__WEBPACK_AMD_DEFINE_FACTORY__ = (factory), __WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ? (__WEBPACK_AMD_DEFINE_FACTORY__.call(exports, __webpack_require__, exports, module)) : __WEBPACK_AMD_DEFINE_FACTORY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-		}
-		else if (typeof module != "undefined" && typeof module.exports != "undefined") {
+		} else if (typeof module != "undefined" && typeof module.exports != "undefined") {
 			module.exports = factory();
-		}
-		else {
+		} else {
 			/* jshint sub:true */
 			window["Sortable"] = factory();
 		}
@@ -168,199 +211,167 @@
 		}
 	
 		var dragEl,
-			parentEl,
-			ghostEl,
-			cloneEl,
-			rootEl,
-			nextEl,
-			lastDownEl,
-	
-			scrollEl,
-			scrollParentEl,
-			scrollCustomFn,
-	
-			lastEl,
-			lastCSS,
-			lastParentCSS,
-	
-			oldIndex,
-			newIndex,
-	
-			activeGroup,
-			putSortable,
-	
-			autoScroll = {},
-	
-			tapEvt,
-			touchEvt,
-	
-			moved,
-	
-			/** @const */
-			R_SPACE = /\s+/g,
-			R_FLOAT = /left|right|inline/,
-	
-			expando = 'Sortable' + (new Date).getTime(),
-	
-			win = window,
-			document = win.document,
-			parseInt = win.parseInt,
-	
-			$ = win.jQuery || win.Zepto,
-			Polymer = win.Polymer,
-	
-			captureMode = false,
-	
-			supportDraggable = !!('draggable' in document.createElement('div')),
-			supportCssPointerEvents = (function (el) {
-				// false when IE11
-				if (!!navigator.userAgent.match(/Trident.*rv[ :]?11\./)) {
-					return false;
-				}
-				el = document.createElement('x');
-				el.style.cssText = 'pointer-events:auto';
-				return el.style.pointerEvents === 'auto';
-			})(),
-	
-			_silent = false,
-	
-			abs = Math.abs,
-			min = Math.min,
-	
-			savedInputChecked = [],
-			touchDragOverListeners = [],
-	
-			_autoScroll = _throttle(function (/**Event*/evt, /**Object*/options, /**HTMLElement*/rootEl) {
-				// Bug: https://bugzilla.mozilla.org/show_bug.cgi?id=505521
-				if (rootEl && options.scroll) {
-					var _this = rootEl[expando],
-						el,
-						rect,
-						sens = options.scrollSensitivity,
-						speed = options.scrollSpeed,
-	
-						x = evt.clientX,
-						y = evt.clientY,
-	
-						winWidth = window.innerWidth,
-						winHeight = window.innerHeight,
-	
-						vx,
-						vy,
-	
-						scrollOffsetX,
-						scrollOffsetY
-					;
-	
-					// Delect scrollEl
-					if (scrollParentEl !== rootEl) {
-						scrollEl = options.scroll;
-						scrollParentEl = rootEl;
-						scrollCustomFn = options.scrollFn;
-	
-						if (scrollEl === true) {
-							scrollEl = rootEl;
-	
-							do {
-								if ((scrollEl.offsetWidth < scrollEl.scrollWidth) ||
-									(scrollEl.offsetHeight < scrollEl.scrollHeight)
-								) {
-									break;
-								}
-								/* jshint boss:true */
-							} while (scrollEl = scrollEl.parentNode);
-						}
-					}
-	
-					if (scrollEl) {
-						el = scrollEl;
-						rect = scrollEl.getBoundingClientRect();
-						vx = (abs(rect.right - x) <= sens) - (abs(rect.left - x) <= sens);
-						vy = (abs(rect.bottom - y) <= sens) - (abs(rect.top - y) <= sens);
-					}
+		    parentEl,
+		    ghostEl,
+		    cloneEl,
+		    rootEl,
+		    nextEl,
+		    lastDownEl,
+		    scrollEl,
+		    scrollParentEl,
+		    scrollCustomFn,
+		    lastEl,
+		    lastCSS,
+		    lastParentCSS,
+		    oldIndex,
+		    newIndex,
+		    activeGroup,
+		    putSortable,
+		    autoScroll = {},
+		    tapEvt,
+		    touchEvt,
+		    moved,
 	
 	
-					if (!(vx || vy)) {
-						vx = (winWidth - x <= sens) - (x <= sens);
-						vy = (winHeight - y <= sens) - (y <= sens);
-	
-						/* jshint expr:true */
-						(vx || vy) && (el = win);
-					}
-	
-	
-					if (autoScroll.vx !== vx || autoScroll.vy !== vy || autoScroll.el !== el) {
-						autoScroll.el = el;
-						autoScroll.vx = vx;
-						autoScroll.vy = vy;
-	
-						clearInterval(autoScroll.pid);
-	
-						if (el) {
-							autoScroll.pid = setInterval(function () {
-								scrollOffsetY = vy ? vy * speed : 0;
-								scrollOffsetX = vx ? vx * speed : 0;
-	
-								if ('function' === typeof(scrollCustomFn)) {
-									return scrollCustomFn.call(_this, scrollOffsetX, scrollOffsetY, evt);
-								}
-	
-								if (el === win) {
-									win.scrollTo(win.pageXOffset + scrollOffsetX, win.pageYOffset + scrollOffsetY);
-								} else {
-									el.scrollTop += scrollOffsetY;
-									el.scrollLeft += scrollOffsetX;
-								}
-							}, 24);
-						}
-					}
-				}
-			}, 30),
-	
-			_prepareGroup = function (options) {
-				function toFn(value, pull) {
-					if (value === void 0 || value === true) {
-						value = group.name;
-					}
-	
-					if (typeof value === 'function') {
-						return value;
-					} else {
-						return function (to, from) {
-							var fromGroup = from.options.group.name;
-	
-							return pull
-								? value
-								: value && (value.join
-									? value.indexOf(fromGroup) > -1
-									: (fromGroup == value)
-								);
-						};
-					}
-				}
-	
-				var group = {};
-				var originalGroup = options.group;
-	
-				if (!originalGroup || typeof originalGroup != 'object') {
-					originalGroup = {name: originalGroup};
-				}
-	
-				group.name = originalGroup.name;
-				group.checkPull = toFn(originalGroup.pull, true);
-				group.checkPut = toFn(originalGroup.put);
-				group.revertClone = originalGroup.revertClone;
-	
-				options.group = group;
+		/** @const */
+		R_SPACE = /\s+/g,
+		    R_FLOAT = /left|right|inline/,
+		    expando = 'Sortable' + new Date().getTime(),
+		    win = window,
+		    document = win.document,
+		    parseInt = win.parseInt,
+		    $ = win.jQuery || win.Zepto,
+		    Polymer = win.Polymer,
+		    captureMode = false,
+		    supportDraggable = !!('draggable' in document.createElement('div')),
+		    supportCssPointerEvents = function (el) {
+			// false when IE11
+			if (!!navigator.userAgent.match(/Trident.*rv[ :]?11\./)) {
+				return false;
 			}
-		;
+			el = document.createElement('x');
+			el.style.cssText = 'pointer-events:auto';
+			return el.style.pointerEvents === 'auto';
+		}(),
+		    _silent = false,
+		    abs = Math.abs,
+		    min = Math.min,
+		    savedInputChecked = [],
+		    touchDragOverListeners = [],
+		    _autoScroll = _throttle(function ( /**Event*/evt, /**Object*/options, /**HTMLElement*/rootEl) {
+			// Bug: https://bugzilla.mozilla.org/show_bug.cgi?id=505521
+			if (rootEl && options.scroll) {
+				var _this = rootEl[expando],
+				    el,
+				    rect,
+				    sens = options.scrollSensitivity,
+				    speed = options.scrollSpeed,
+				    x = evt.clientX,
+				    y = evt.clientY,
+				    winWidth = window.innerWidth,
+				    winHeight = window.innerHeight,
+				    vx,
+				    vy,
+				    scrollOffsetX,
+				    scrollOffsetY;
 	
+				// Delect scrollEl
+				if (scrollParentEl !== rootEl) {
+					scrollEl = options.scroll;
+					scrollParentEl = rootEl;
+					scrollCustomFn = options.scrollFn;
+	
+					if (scrollEl === true) {
+						scrollEl = rootEl;
+	
+						do {
+							if (scrollEl.offsetWidth < scrollEl.scrollWidth || scrollEl.offsetHeight < scrollEl.scrollHeight) {
+								break;
+							}
+							/* jshint boss:true */
+						} while (scrollEl = scrollEl.parentNode);
+					}
+				}
+	
+				if (scrollEl) {
+					el = scrollEl;
+					rect = scrollEl.getBoundingClientRect();
+					vx = (abs(rect.right - x) <= sens) - (abs(rect.left - x) <= sens);
+					vy = (abs(rect.bottom - y) <= sens) - (abs(rect.top - y) <= sens);
+				}
+	
+				if (!(vx || vy)) {
+					vx = (winWidth - x <= sens) - (x <= sens);
+					vy = (winHeight - y <= sens) - (y <= sens);
+	
+					/* jshint expr:true */
+					(vx || vy) && (el = win);
+				}
+	
+				if (autoScroll.vx !== vx || autoScroll.vy !== vy || autoScroll.el !== el) {
+					autoScroll.el = el;
+					autoScroll.vx = vx;
+					autoScroll.vy = vy;
+	
+					clearInterval(autoScroll.pid);
+	
+					if (el) {
+						autoScroll.pid = setInterval(function () {
+							scrollOffsetY = vy ? vy * speed : 0;
+							scrollOffsetX = vx ? vx * speed : 0;
+	
+							if ('function' === typeof scrollCustomFn) {
+								return scrollCustomFn.call(_this, scrollOffsetX, scrollOffsetY, evt);
+							}
+	
+							if (el === win) {
+								win.scrollTo(win.pageXOffset + scrollOffsetX, win.pageYOffset + scrollOffsetY);
+							} else {
+								el.scrollTop += scrollOffsetY;
+								el.scrollLeft += scrollOffsetX;
+							}
+						}, 24);
+					}
+				}
+			}
+		}, 30),
+		    _prepareGroup = function _prepareGroup(options) {
+			function toFn(value, pull) {
+				if (value === void 0 || value === true) {
+					value = group.name;
+				}
+	
+				if (typeof value === 'function') {
+					return value;
+				} else {
+					return function (to, from) {
+						var fromGroup = from.options.group.name;
+	
+						return pull ? value : value && (value.join ? value.indexOf(fromGroup) > -1 : fromGroup == value);
+					};
+				}
+			}
+	
+			var group = {};
+			var originalGroup = options.group;
+	
+			if (!originalGroup || (typeof originalGroup === "undefined" ? "undefined" : _typeof(originalGroup)) != 'object') {
+				originalGroup = { name: originalGroup };
+			}
+	
+			group.name = originalGroup.name;
+			group.checkPull = toFn(originalGroup.pull, true);
+			group.checkPut = toFn(originalGroup.put);
+			group.revertClone = originalGroup.revertClone;
+	
+			options.group = group;
+		};
 	
 		/**
-		 * @class  Sortable
-		 * @param  {HTMLElement}  el
-		 * @param  {Object}       [options]
-		 */
+	  * @class  Sortable
+	  * @param  {HTMLElement}  el
+	  * @param  {Object}       [options]
+	  */
 		function Sortable(el, options) {
 			if (!(el && el.nodeType && el.nodeType === 1)) {
 				throw 'Sortable: `el` must be HTMLElement, and not ' + {}.toString.call(el);
@@ -368,7 +379,6 @@
 	
 			this.el = el; // root element
 			this.options = options = _extend({}, options);
-	
 	
 			// Export instance
 			el[expando] = this;
@@ -391,7 +401,7 @@
 				filter: null,
 				preventOnFilter: true,
 				animation: 0,
-				setData: function (dataTransfer, dragEl) {
+				setData: function setData(dataTransfer, dragEl) {
 					dataTransfer.setData('Text', dragEl.textContent);
 				},
 				dropBubble: false,
@@ -402,9 +412,8 @@
 				fallbackClass: 'sortable-fallback',
 				fallbackOnBody: false,
 				fallbackTolerance: 0,
-				fallbackOffset: {x: 0, y: 0}
+				fallbackOffset: { x: 0, y: 0 }
 			};
-	
 	
 			// Set default options
 			for (var name in defaults) {
@@ -439,24 +448,22 @@
 			options.store && this.sort(options.store.get(this));
 		}
 	
-	
-		Sortable.prototype = /** @lends Sortable.prototype */ {
+		Sortable.prototype = /** @lends Sortable.prototype */{
 			constructor: Sortable,
 	
-			_onTapStart: function (/** Event|TouchEvent */evt) {
+			_onTapStart: function _onTapStart( /** Event|TouchEvent */evt) {
 				var _this = this,
-					el = this.el,
-					options = this.options,
-					preventOnFilter = options.preventOnFilter,
-					type = evt.type,
-					touch = evt.touches && evt.touches[0],
-					target = (touch || evt).target,
-					originalTarget = evt.target.shadowRoot && (evt.path && evt.path[0]) || target,
-					filter = options.filter,
-					startIndex;
+				    el = this.el,
+				    options = this.options,
+				    preventOnFilter = options.preventOnFilter,
+				    type = evt.type,
+				    touch = evt.touches && evt.touches[0],
+				    target = (touch || evt).target,
+				    originalTarget = evt.target.shadowRoot && evt.path && evt.path[0] || target,
+				    filter = options.filter,
+				    startIndex;
 	
 				_saveInputCheckedState(el);
-	
 	
 				// Don't trigger start event when an element is been dragged, otherwise the evt.oldindex always wrong when set option.group.
 				if (dragEl) {
@@ -466,7 +473,6 @@
 				if (/mousedown|pointerdown/.test(type) && evt.button !== 0 || options.disabled) {
 					return; // only left button or enabled
 				}
-	
 	
 				target = _closest(target, options.draggable, el);
 	
@@ -489,8 +495,7 @@
 						preventOnFilter && evt.preventDefault();
 						return; // cancel dnd
 					}
-				}
-				else if (filter) {
+				} else if (filter) {
 					filter = filter.split(',').some(function (criteria) {
 						criteria = _closest(originalTarget, criteria.trim(), el);
 	
@@ -514,14 +519,14 @@
 				this._prepareDragStart(evt, touch, target, startIndex);
 			},
 	
-			_prepareDragStart: function (/** Event */evt, /** Touch */touch, /** HTMLElement */target, /** Number */startIndex) {
+			_prepareDragStart: function _prepareDragStart( /** Event */evt, /** Touch */touch, /** HTMLElement */target, /** Number */startIndex) {
 				var _this = this,
-					el = _this.el,
-					options = _this.options,
-					ownerDocument = el.ownerDocument,
-					dragStartFn;
+				    el = _this.el,
+				    options = _this.options,
+				    ownerDocument = el.ownerDocument,
+				    dragStartFn;
 	
-				if (target && !dragEl && (target.parentNode === el)) {
+				if (target && !dragEl && target.parentNode === el) {
 					tapEvt = evt;
 	
 					rootEl = el;
@@ -537,7 +542,7 @@
 	
 					dragEl.style['will-change'] = 'transform';
 	
-					dragStartFn = function () {
+					dragStartFn = function dragStartFn() {
 						// Delayed drag has been triggered
 						// we can re-enable the events: touchmove/mousemove
 						_this._disableDelayedDrag();
@@ -581,12 +586,10 @@
 					} else {
 						dragStartFn();
 					}
-	
-	
 				}
 			},
 	
-			_disableDelayedDrag: function () {
+			_disableDelayedDrag: function _disableDelayedDrag() {
 				var ownerDocument = this.el.ownerDocument;
 	
 				clearTimeout(this._dragStartTimer);
@@ -598,7 +601,7 @@
 				_off(ownerDocument, 'pointermove', this._disableDelayedDrag);
 			},
 	
-			_triggerDragStart: function (/** Event */evt, /** Touch */touch) {
+			_triggerDragStart: function _triggerDragStart( /** Event */evt, /** Touch */touch) {
 				touch = touch || (evt.pointerType == 'touch' ? evt : null);
 	
 				if (touch) {
@@ -610,11 +613,9 @@
 					};
 	
 					this._onDragStart(tapEvt, 'touch');
-				}
-				else if (!this.nativeDraggable) {
+				} else if (!this.nativeDraggable) {
 					this._onDragStart(tapEvt, true);
-				}
-				else {
+				} else {
 					_on(dragEl, 'dragend', this);
 					_on(rootEl, 'dragstart', this._onDragStart);
 				}
@@ -628,11 +629,10 @@
 					} else {
 						window.getSelection().removeAllRanges();
 					}
-				} catch (err) {
-				}
+				} catch (err) {}
 			},
 	
-			_dragStarted: function () {
+			_dragStarted: function _dragStarted() {
 				if (rootEl && dragEl) {
 					var options = this.options;
 	
@@ -649,7 +649,7 @@
 				}
 			},
 	
-			_emulateDragOver: function () {
+			_emulateDragOver: function _emulateDragOver() {
 				if (touchEvt) {
 					if (this._lastX === touchEvt.clientX && this._lastY === touchEvt.clientY) {
 						return;
@@ -663,8 +663,8 @@
 					}
 	
 					var target = document.elementFromPoint(touchEvt.clientX, touchEvt.clientY),
-						parent = target,
-						i = touchDragOverListeners.length;
+					    parent = target,
+					    i = touchDragOverListeners.length;
 	
 					if (parent) {
 						do {
@@ -693,22 +693,19 @@
 				}
 			},
 	
-	
-			_onTouchMove: function (/**TouchEvent*/evt) {
+			_onTouchMove: function _onTouchMove( /**TouchEvent*/evt) {
 				if (tapEvt) {
-					var	options = this.options,
-						fallbackTolerance = options.fallbackTolerance,
-						fallbackOffset = options.fallbackOffset,
-						touch = evt.touches ? evt.touches[0] : evt,
-						dx = (touch.clientX - tapEvt.clientX) + fallbackOffset.x,
-						dy = (touch.clientY - tapEvt.clientY) + fallbackOffset.y,
-						translate3d = evt.touches ? 'translate3d(' + dx + 'px,' + dy + 'px,0)' : 'translate(' + dx + 'px,' + dy + 'px)';
+					var options = this.options,
+					    fallbackTolerance = options.fallbackTolerance,
+					    fallbackOffset = options.fallbackOffset,
+					    touch = evt.touches ? evt.touches[0] : evt,
+					    dx = touch.clientX - tapEvt.clientX + fallbackOffset.x,
+					    dy = touch.clientY - tapEvt.clientY + fallbackOffset.y,
+					    translate3d = evt.touches ? 'translate3d(' + dx + 'px,' + dy + 'px,0)' : 'translate(' + dx + 'px,' + dy + 'px)';
 	
 					// only set the status to dragging, when we are actually dragging
 					if (!Sortable.active) {
-						if (fallbackTolerance &&
-							min(abs(touch.clientX - this._lastX), abs(touch.clientY - this._lastY)) < fallbackTolerance
-						) {
+						if (fallbackTolerance && min(abs(touch.clientX - this._lastX), abs(touch.clientY - this._lastY)) < fallbackTolerance) {
 							return;
 						}
 	
@@ -730,12 +727,12 @@
 				}
 			},
 	
-			_appendGhost: function () {
+			_appendGhost: function _appendGhost() {
 				if (!ghostEl) {
 					var rect = dragEl.getBoundingClientRect(),
-						css = _css(dragEl),
-						options = this.options,
-						ghostRect;
+					    css = _css(dragEl),
+					    options = this.options,
+					    ghostRect;
 	
 					ghostEl = dragEl.cloneNode(true);
 	
@@ -761,9 +758,9 @@
 				}
 			},
 	
-			_onDragStart: function (/**Event*/evt, /**boolean*/useFallback) {
+			_onDragStart: function _onDragStart( /**Event*/evt, /**boolean*/useFallback) {
 				var dataTransfer = evt.dataTransfer,
-					options = this.options;
+				    options = this.options;
 	
 				this._offUpEvents();
 	
@@ -797,8 +794,7 @@
 					}
 	
 					this._loopId = setInterval(this._emulateDragOver, 50);
-				}
-				else {
+				} else {
 					if (dataTransfer) {
 						dataTransfer.effectAllowed = 'move';
 						options.setData && options.setData.call(this, dataTransfer, dragEl);
@@ -809,18 +805,18 @@
 				}
 			},
 	
-			_onDragOver: function (/**Event*/evt) {
+			_onDragOver: function _onDragOver( /**Event*/evt) {
 				var el = this.el,
-					target,
-					dragRect,
-					targetRect,
-					revert,
-					options = this.options,
-					group = options.group,
-					activeSortable = Sortable.active,
-					isOwner = (activeGroup === group),
-					isMovingBetweenSortable = false,
-					canSort = options.sort;
+				    target,
+				    dragRect,
+				    targetRect,
+				    revert,
+				    options = this.options,
+				    group = options.group,
+				    activeSortable = Sortable.active,
+				    isOwner = activeGroup === group,
+				    isMovingBetweenSortable = false,
+				    canSort = options.sort;
 	
 				if (evt.preventDefault !== void 0) {
 					evt.preventDefault();
@@ -833,143 +829,125 @@
 	
 				moved = true;
 	
-				if (activeSortable && !options.disabled &&
-					(isOwner
-						? canSort || (revert = !rootEl.contains(dragEl)) // Reverting item into the original list
-						: (
-							putSortable === this ||
-							(
-								(activeSortable.lastPullMode = activeGroup.checkPull(this, activeSortable, dragEl, evt)) &&
-								group.checkPut(this, activeSortable, dragEl, evt)
-							)
-						)
-					) &&
-					(evt.rootEl === void 0 || evt.rootEl === this.el) // touch fallback
+				if (activeSortable && !options.disabled && (isOwner ? canSort || (revert = !rootEl.contains(dragEl)) // Reverting item into the original list
+				: putSortable === this || (activeSortable.lastPullMode = activeGroup.checkPull(this, activeSortable, dragEl, evt)) && group.checkPut(this, activeSortable, dragEl, evt)) && (evt.rootEl === void 0 || evt.rootEl === this.el) // touch fallback
 				) {
-					// Smart auto-scrolling
-					_autoScroll(evt, options, this.el);
+						// Smart auto-scrolling
+						_autoScroll(evt, options, this.el);
 	
-					if (_silent) {
-						return;
-					}
-	
-					target = _closest(evt.target, options.draggable, el);
-					dragRect = dragEl.getBoundingClientRect();
-	
-					if (putSortable !== this) {
-						putSortable = this;
-						isMovingBetweenSortable = true;
-					}
-	
-					if (revert) {
-						_cloneHide(activeSortable, true);
-						parentEl = rootEl; // actualization
-	
-						if (cloneEl || nextEl) {
-							rootEl.insertBefore(dragEl, cloneEl || nextEl);
-						}
-						else if (!canSort) {
-							rootEl.appendChild(dragEl);
+						if (_silent) {
+							return;
 						}
 	
-						return;
-					}
+						target = _closest(evt.target, options.draggable, el);
+						dragRect = dragEl.getBoundingClientRect();
 	
-	
-					if ((el.children.length === 0) || (el.children[0] === ghostEl) ||
-						(el === evt.target) && (_ghostIsLast(el, evt))
-					) {
-						//assign target only if condition is true
-						if (el.children.length !== 0 && el.children[0] !== ghostEl && el === evt.target) {
-							target = el.lastElementChild;
+						if (putSortable !== this) {
+							putSortable = this;
+							isMovingBetweenSortable = true;
 						}
 	
-						if (target) {
-							if (target.animated) {
-								return;
+						if (revert) {
+							_cloneHide(activeSortable, true);
+							parentEl = rootEl; // actualization
+	
+							if (cloneEl || nextEl) {
+								rootEl.insertBefore(dragEl, cloneEl || nextEl);
+							} else if (!canSort) {
+								rootEl.appendChild(dragEl);
 							}
 	
-							targetRect = target.getBoundingClientRect();
+							return;
 						}
 	
-						_cloneHide(activeSortable, isOwner);
-	
-						if (_onMove(rootEl, el, dragEl, dragRect, target, targetRect, evt) !== false) {
-							if (!dragEl.contains(el)) {
-								el.appendChild(dragEl);
-								parentEl = el; // actualization
+						if (el.children.length === 0 || el.children[0] === ghostEl || el === evt.target && _ghostIsLast(el, evt)) {
+							//assign target only if condition is true
+							if (el.children.length !== 0 && el.children[0] !== ghostEl && el === evt.target) {
+								target = el.lastElementChild;
 							}
 	
-							this._animate(dragRect, dragEl);
-							target && this._animate(targetRect, target);
-						}
-					}
-					else if (target && !target.animated && target !== dragEl && (target.parentNode[expando] !== void 0)) {
-						if (lastEl !== target) {
-							lastEl = target;
-							lastCSS = _css(target);
-							lastParentCSS = _css(target.parentNode);
-						}
+							if (target) {
+								if (target.animated) {
+									return;
+								}
 	
-						targetRect = target.getBoundingClientRect();
-	
-						var width = targetRect.right - targetRect.left,
-							height = targetRect.bottom - targetRect.top,
-							floating = R_FLOAT.test(lastCSS.cssFloat + lastCSS.display)
-								|| (lastParentCSS.display == 'flex' && lastParentCSS['flex-direction'].indexOf('row') === 0),
-							isWide = (target.offsetWidth > dragEl.offsetWidth),
-							isLong = (target.offsetHeight > dragEl.offsetHeight),
-							halfway = (floating ? (evt.clientX - targetRect.left) / width : (evt.clientY - targetRect.top) / height) > 0.5,
-							nextSibling = target.nextElementSibling,
-							after = false
-						;
-	
-						if (floating) {
-							var elTop = dragEl.offsetTop,
-								tgTop = target.offsetTop;
-	
-							if (elTop === tgTop) {
-								after = (target.previousElementSibling === dragEl) && !isWide || halfway && isWide;
+								targetRect = target.getBoundingClientRect();
 							}
-							else if (target.previousElementSibling === dragEl || dragEl.previousElementSibling === target) {
-								after = (evt.clientY - targetRect.top) / height > 0.5;
-							} else {
-								after = tgTop > elTop;
-							}
-							} else if (!isMovingBetweenSortable) {
-							after = (nextSibling !== dragEl) && !isLong || halfway && isLong;
-						}
-	
-						var moveVector = _onMove(rootEl, el, dragEl, dragRect, target, targetRect, evt, after);
-	
-						if (moveVector !== false) {
-							if (moveVector === 1 || moveVector === -1) {
-								after = (moveVector === 1);
-							}
-	
-							_silent = true;
-							setTimeout(_unsilent, 30);
 	
 							_cloneHide(activeSortable, isOwner);
 	
-							if (!dragEl.contains(el)) {
-								if (after && !nextSibling) {
+							if (_onMove(rootEl, el, dragEl, dragRect, target, targetRect, evt) !== false) {
+								if (!dragEl.contains(el)) {
 									el.appendChild(dragEl);
-								} else {
-									target.parentNode.insertBefore(dragEl, after ? nextSibling : target);
+									parentEl = el; // actualization
 								}
+	
+								this._animate(dragRect, dragEl);
+								target && this._animate(targetRect, target);
+							}
+						} else if (target && !target.animated && target !== dragEl && target.parentNode[expando] !== void 0) {
+							if (lastEl !== target) {
+								lastEl = target;
+								lastCSS = _css(target);
+								lastParentCSS = _css(target.parentNode);
 							}
 	
-							parentEl = dragEl.parentNode; // actualization
+							targetRect = target.getBoundingClientRect();
 	
-							this._animate(dragRect, dragEl);
-							this._animate(targetRect, target);
+							var width = targetRect.right - targetRect.left,
+							    height = targetRect.bottom - targetRect.top,
+							    floating = R_FLOAT.test(lastCSS.cssFloat + lastCSS.display) || lastParentCSS.display == 'flex' && lastParentCSS['flex-direction'].indexOf('row') === 0,
+							    isWide = target.offsetWidth > dragEl.offsetWidth,
+							    isLong = target.offsetHeight > dragEl.offsetHeight,
+							    halfway = (floating ? (evt.clientX - targetRect.left) / width : (evt.clientY - targetRect.top) / height) > 0.5,
+							    nextSibling = target.nextElementSibling,
+							    after = false;
+	
+							if (floating) {
+								var elTop = dragEl.offsetTop,
+								    tgTop = target.offsetTop;
+	
+								if (elTop === tgTop) {
+									after = target.previousElementSibling === dragEl && !isWide || halfway && isWide;
+								} else if (target.previousElementSibling === dragEl || dragEl.previousElementSibling === target) {
+									after = (evt.clientY - targetRect.top) / height > 0.5;
+								} else {
+									after = tgTop > elTop;
+								}
+							} else if (!isMovingBetweenSortable) {
+								after = nextSibling !== dragEl && !isLong || halfway && isLong;
+							}
+	
+							var moveVector = _onMove(rootEl, el, dragEl, dragRect, target, targetRect, evt, after);
+	
+							if (moveVector !== false) {
+								if (moveVector === 1 || moveVector === -1) {
+									after = moveVector === 1;
+								}
+	
+								_silent = true;
+								setTimeout(_unsilent, 30);
+	
+								_cloneHide(activeSortable, isOwner);
+	
+								if (!dragEl.contains(el)) {
+									if (after && !nextSibling) {
+										el.appendChild(dragEl);
+									} else {
+										target.parentNode.insertBefore(dragEl, after ? nextSibling : target);
+									}
+								}
+	
+								parentEl = dragEl.parentNode; // actualization
+	
+								this._animate(dragRect, dragEl);
+								this._animate(targetRect, target);
+							}
 						}
 					}
-				}
 			},
 	
-			_animate: function (prevRect, target) {
+			_animate: function _animate(prevRect, target) {
 				var ms = this.options.animation;
 	
 				if (ms) {
@@ -980,10 +958,7 @@
 					}
 	
 					_css(target, 'transition', 'none');
-					_css(target, 'transform', 'translate3d('
-						+ (prevRect.left - currentRect.left) + 'px,'
-						+ (prevRect.top - currentRect.top) + 'px,0)'
-					);
+					_css(target, 'transform', 'translate3d(' + (prevRect.left - currentRect.left) + 'px,' + (prevRect.top - currentRect.top) + 'px,0)');
 	
 					target.offsetWidth; // repaint
 	
@@ -999,7 +974,7 @@
 				}
 			},
 	
-			_offUpEvents: function () {
+			_offUpEvents: function _offUpEvents() {
 				var ownerDocument = this.el.ownerDocument;
 	
 				_off(document, 'touchmove', this._onTouchMove);
@@ -1012,9 +987,9 @@
 				_off(ownerDocument, 'selectstart', this);
 			},
 	
-			_onDrop: function (/**Event*/evt) {
+			_onDrop: function _onDrop( /**Event*/evt) {
 				var el = this.el,
-					options = this.options;
+				    options = this.options;
 	
 				clearInterval(this._loopId);
 				clearInterval(autoScroll.pid);
@@ -1072,8 +1047,7 @@
 								_dispatchEvent(null, parentEl, 'sort', dragEl, rootEl, oldIndex, newIndex);
 								_dispatchEvent(this, rootEl, 'sort', dragEl, rootEl, oldIndex, newIndex);
 							}
-						}
-						else {
+						} else {
 							if (dragEl.nextSibling !== nextEl) {
 								// Get the index of the dragged element within its parent
 								newIndex = _index(dragEl, options.draggable);
@@ -1098,36 +1072,13 @@
 							this.save();
 						}
 					}
-	
 				}
 	
 				this._nulling();
 			},
 	
-			_nulling: function() {
-				rootEl =
-				dragEl =
-				parentEl =
-				ghostEl =
-				nextEl =
-				cloneEl =
-				lastDownEl =
-	
-				scrollEl =
-				scrollParentEl =
-	
-				tapEvt =
-				touchEvt =
-	
-				moved =
-				newIndex =
-	
-				lastEl =
-				lastCSS =
-	
-				putSortable =
-				activeGroup =
-				Sortable.active = null;
+			_nulling: function _nulling() {
+				rootEl = dragEl = parentEl = ghostEl = nextEl = cloneEl = lastDownEl = scrollEl = scrollParentEl = tapEvt = touchEvt = moved = newIndex = lastEl = lastCSS = putSortable = activeGroup = Sortable.active = null;
 	
 				savedInputChecked.forEach(function (el) {
 					el.checked = true;
@@ -1135,7 +1086,7 @@
 				savedInputChecked.length = 0;
 			},
 	
-			handleEvent: function (/**Event*/evt) {
+			handleEvent: function handleEvent( /**Event*/evt) {
 				switch (evt.type) {
 					case 'drop':
 					case 'dragend':
@@ -1156,18 +1107,17 @@
 				}
 			},
 	
-	
 			/**
-			 * Serializes the item into an array of string.
-			 * @returns {String[]}
-			 */
-			toArray: function () {
+	   * Serializes the item into an array of string.
+	   * @returns {String[]}
+	   */
+			toArray: function toArray() {
 				var order = [],
-					el,
-					children = this.el.children,
-					i = 0,
-					n = children.length,
-					options = this.options;
+				    el,
+				    children = this.el.children,
+				    i = 0,
+				    n = children.length,
+				    options = this.options;
 	
 				for (; i < n; i++) {
 					el = children[i];
@@ -1179,13 +1129,13 @@
 				return order;
 			},
 	
-	
 			/**
-			 * Sorts the elements according to the array.
-			 * @param  {String[]}  order  order of the items
-			 */
-			sort: function (order) {
-				var items = {}, rootEl = this.el;
+	   * Sorts the elements according to the array.
+	   * @param  {String[]}  order  order of the items
+	   */
+			sort: function sort(order) {
+				var items = {},
+				    rootEl = this.el;
 	
 				this.toArray().forEach(function (id, i) {
 					var el = rootEl.children[i];
@@ -1203,34 +1153,31 @@
 				});
 			},
 	
-	
 			/**
-			 * Save the current sorting
-			 */
-			save: function () {
+	   * Save the current sorting
+	   */
+			save: function save() {
 				var store = this.options.store;
 				store && store.set(this);
 			},
 	
-	
 			/**
-			 * For each element in the set, get the first element that matches the selector by testing the element itself and traversing up through its ancestors in the DOM tree.
-			 * @param   {HTMLElement}  el
-			 * @param   {String}       [selector]  default: `options.draggable`
-			 * @returns {HTMLElement|null}
-			 */
-			closest: function (el, selector) {
+	   * For each element in the set, get the first element that matches the selector by testing the element itself and traversing up through its ancestors in the DOM tree.
+	   * @param   {HTMLElement}  el
+	   * @param   {String}       [selector]  default: `options.draggable`
+	   * @returns {HTMLElement|null}
+	   */
+			closest: function closest(el, selector) {
 				return _closest(el, selector || this.options.draggable, this.el);
 			},
 	
-	
 			/**
-			 * Set/get option
-			 * @param   {string} name
-			 * @param   {*}      [value]
-			 * @returns {*}
-			 */
-			option: function (name, value) {
+	   * Set/get option
+	   * @param   {string} name
+	   * @param   {*}      [value]
+	   * @returns {*}
+	   */
+			option: function option(name, value) {
 				var options = this.options;
 	
 				if (value === void 0) {
@@ -1244,11 +1191,10 @@
 				}
 			},
 	
-	
 			/**
-			 * Destroy
-			 */
-			destroy: function () {
+	   * Destroy
+	   */
+			destroy: function destroy() {
 				var el = this.el;
 	
 				el[expando] = null;
@@ -1275,13 +1221,12 @@
 			}
 		};
 	
-	
 		function _cloneHide(sortable, state) {
 			if (sortable.lastPullMode !== 'clone') {
 				state = true;
 			}
 	
-			if (cloneEl && (cloneEl.state !== state)) {
+			if (cloneEl && cloneEl.state !== state) {
 				_css(cloneEl, 'display', state ? 'none' : '');
 	
 				if (!state) {
@@ -1299,13 +1244,12 @@
 			}
 		}
 	
-	
-		function _closest(/**HTMLElement*/el, /**String*/selector, /**HTMLElement*/ctx) {
+		function _closest( /**HTMLElement*/el, /**String*/selector, /**HTMLElement*/ctx) {
 			if (el) {
 				ctx = ctx || document;
 	
 				do {
-					if ((selector === '>*' && el.parentNode === ctx) || _matches(el, selector)) {
+					if (selector === '>*' && el.parentNode === ctx || _matches(el, selector)) {
 						return el;
 					}
 					/* jshint boss:true */
@@ -1315,44 +1259,37 @@
 			return null;
 		}
 	
-	
 		function _getParentOrHost(el) {
 			var parent = el.host;
 	
-			return (parent && parent.nodeType) ? parent : el.parentNode;
+			return parent && parent.nodeType ? parent : el.parentNode;
 		}
 	
-	
-		function _globalDragOver(/**Event*/evt) {
+		function _globalDragOver( /**Event*/evt) {
 			if (evt.dataTransfer) {
 				evt.dataTransfer.dropEffect = 'move';
 			}
 			evt.preventDefault();
 		}
 	
-	
 		function _on(el, event, fn) {
 			el.addEventListener(event, fn, captureMode);
 		}
-	
 	
 		function _off(el, event, fn) {
 			el.removeEventListener(event, fn, captureMode);
 		}
 	
-	
 		function _toggleClass(el, name, state) {
 			if (el) {
 				if (el.classList) {
 					el.classList[state ? 'add' : 'remove'](name);
-				}
-				else {
+				} else {
 					var className = (' ' + el.className + ' ').replace(R_SPACE, ' ').replace(' ' + name + ' ', ' ');
 					el.className = (className + (state ? ' ' + name : '')).replace(R_SPACE, ' ');
 				}
 			}
 		}
-	
 	
 		function _css(el, prop, val) {
 			var style = el && el.style;
@@ -1361,14 +1298,12 @@
 				if (val === void 0) {
 					if (document.defaultView && document.defaultView.getComputedStyle) {
 						val = document.defaultView.getComputedStyle(el, '');
-					}
-					else if (el.currentStyle) {
+					} else if (el.currentStyle) {
 						val = el.currentStyle;
 					}
 	
 					return prop === void 0 ? val : val[prop];
-				}
-				else {
+				} else {
 					if (!(prop in style)) {
 						prop = '-webkit-' + prop;
 					}
@@ -1378,10 +1313,11 @@
 			}
 		}
 	
-	
 		function _find(ctx, tagName, iterator) {
 			if (ctx) {
-				var list = ctx.getElementsByTagName(tagName), i = 0, n = list.length;
+				var list = ctx.getElementsByTagName(tagName),
+				    i = 0,
+				    n = list.length;
 	
 				if (iterator) {
 					for (; i < n; i++) {
@@ -1395,14 +1331,12 @@
 			return [];
 		}
 	
-	
-	
 		function _dispatchEvent(sortable, rootEl, name, targetEl, fromEl, startIndex, newIndex) {
-			sortable = (sortable || rootEl[expando]);
+			sortable = sortable || rootEl[expando];
 	
 			var evt = document.createEvent('Event'),
-				options = sortable.options,
-				onName = 'on' + name.charAt(0).toUpperCase() + name.substr(1);
+			    options = sortable.options,
+			    onName = 'on' + name.charAt(0).toUpperCase() + name.substr(1);
 	
 			evt.initEvent(name, true, true);
 	
@@ -1421,12 +1355,11 @@
 			}
 		}
 	
-	
 		function _onMove(fromEl, toEl, dragEl, dragRect, targetEl, targetRect, originalEvt, willInsertAfter) {
 			var evt,
-				sortable = fromEl[expando],
-				onMoveFn = sortable.options.onMove,
-				retVal;
+			    sortable = fromEl[expando],
+			    onMoveFn = sortable.options.onMove,
+			    retVal;
 	
 			evt = document.createEvent('Event');
 			evt.initEvent('move', true, true);
@@ -1448,39 +1381,34 @@
 			return retVal;
 		}
 	
-	
 		function _disableDraggable(el) {
 			el.draggable = false;
 		}
-	
 	
 		function _unsilent() {
 			_silent = false;
 		}
 	
-	
 		/** @returns {HTMLElement|false} */
 		function _ghostIsLast(el, evt) {
 			var lastEl = el.lastElementChild,
-				rect = lastEl.getBoundingClientRect();
+			    rect = lastEl.getBoundingClientRect();
 	
 			// 5 — min delta
 			// abs — нельзя добавлять, а то глюки при наведении сверху
-			return (evt.clientY - (rect.top + rect.height) > 5) ||
-				(evt.clientX - (rect.left + rect.width) > 5);
+			return evt.clientY - (rect.top + rect.height) > 5 || evt.clientX - (rect.left + rect.width) > 5;
 		}
 	
-	
 		/**
-		 * Generate id
-		 * @param   {HTMLElement} el
-		 * @returns {String}
-		 * @private
-		 */
+	  * Generate id
+	  * @param   {HTMLElement} el
+	  * @returns {String}
+	  * @private
+	  */
 		function _generateId(el) {
 			var str = el.tagName + el.className + el.src + el.href + el.textContent,
-				i = str.length,
-				sum = 0;
+			    i = str.length,
+			    sum = 0;
 	
 			while (i--) {
 				sum += str.charCodeAt(i);
@@ -1490,12 +1418,12 @@
 		}
 	
 		/**
-		 * Returns the index of an element within its parent for a selected set of
-		 * elements
-		 * @param  {HTMLElement} el
-		 * @param  {selector} selector
-		 * @return {number}
-		 */
+	  * Returns the index of an element within its parent for a selected set of
+	  * elements
+	  * @param  {HTMLElement} el
+	  * @param  {selector} selector
+	  * @return {number}
+	  */
 		function _index(el, selector) {
 			var index = 0;
 	
@@ -1504,7 +1432,7 @@
 			}
 	
 			while (el && (el = el.previousElementSibling)) {
-				if ((el.nodeName.toUpperCase() !== 'TEMPLATE') && (selector === '>*' || _matches(el, selector))) {
+				if (el.nodeName.toUpperCase() !== 'TEMPLATE' && (selector === '>*' || _matches(el, selector))) {
 					index++;
 				}
 			}
@@ -1512,17 +1440,14 @@
 			return index;
 		}
 	
-		function _matches(/**HTMLElement*/el, /**String*/selector) {
+		function _matches( /**HTMLElement*/el, /**String*/selector) {
 			if (el) {
 				selector = selector.split('.');
 	
 				var tag = selector.shift().toUpperCase(),
-					re = new RegExp('\\s(' + selector.join('|') + ')(?=\\s)', 'g');
+				    re = new RegExp('\\s(' + selector.join('|') + ')(?=\\s)', 'g');
 	
-				return (
-					(tag === '' || el.nodeName.toUpperCase() == tag) &&
-					(!selector.length || ((' ' + el.className + ' ').match(re) || []).length == selector.length)
-				);
+				return (tag === '' || el.nodeName.toUpperCase() == tag) && (!selector.length || ((' ' + el.className + ' ').match(re) || []).length == selector.length);
 			}
 	
 			return false;
@@ -1562,12 +1487,7 @@
 		}
 	
 		function _clone(el) {
-			return $
-				? $(el).clone(true)[0]
-				: (Polymer && Polymer.dom
-					? Polymer.dom(el).cloneNode(true)
-					: el.cloneNode(true)
-				);
+			return $ ? $(el).clone(true)[0] : Polymer && Polymer.dom ? Polymer.dom(el).cloneNode(true) : el.cloneNode(true);
 		}
 	
 		function _saveInputCheckedState(root) {
@@ -1589,7 +1509,7 @@
 	
 		try {
 			window.addEventListener('test', null, Object.defineProperty({}, 'passive', {
-				get: function () {
+				get: function get() {
 					captureMode = {
 						capture: false,
 						passive: false
@@ -1604,7 +1524,7 @@
 			off: _off,
 			css: _css,
 			find: _find,
-			is: function (el, selector) {
+			is: function is(el, selector) {
 				return !!_closest(el, selector, el);
 			},
 			extend: _extend,
@@ -1615,25 +1535,33 @@
 			index: _index
 		};
 	
-	
 		/**
-		 * Create sortable instance
-		 * @param {HTMLElement}  el
-		 * @param {Object}      [options]
-		 */
+	  * Create sortable instance
+	  * @param {HTMLElement}  el
+	  * @param {Object}      [options]
+	  */
 		Sortable.create = function (el, options) {
 			return new Sortable(el, options);
 		};
-	
 	
 		// Export
 		Sortable.version = '1.6.1';
 		return Sortable;
 	});
 
+/***/ }),
+/* 4 */
+/***/ (function(module, exports) {
+
+	// removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 3 */
+/* 5 */,
+/* 6 */,
+/* 7 */,
+/* 8 */,
+/* 9 */,
+/* 10 */
 /***/ (function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
