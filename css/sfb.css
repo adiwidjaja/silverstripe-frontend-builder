@@ -239,7 +239,7 @@
 .ion-email-unread:before,
 .ion-erlenmeyer-flask:before,
 .ion-erlenmeyer-flask-bubbles:before,
-.ion-eye:before, .sfb-tools > li.sfb-tools_show:before,
+.ion-eye:before, .fpb-tools > li.fpb-tools_show:before,
 .ion-eye-disabled:before,
 .ion-female:before,
 .ion-filing:before,
@@ -255,7 +255,7 @@
 .ion-forward:before,
 .ion-funnel:before,
 .ion-gear-a:before,
-.ion-gear-b:before, .sfb-tools > li.sfb-tools_edit:before,
+.ion-gear-b:before, .fpb-tools > li.fpb-tools_edit:before,
 .ion-grid:before,
 .ion-hammer:before,
 .ion-happy:before,
@@ -580,7 +580,7 @@
 .ion-more:before,
 .ion-mouse:before,
 .ion-music-note:before,
-.ion-navicon:before, .sfb-tools > li.sfb-tools_handle:before,
+.ion-navicon:before, .fpb-tools > li.fpb-tools_handle:before,
 .ion-navicon-round:before,
 .ion-navigate:before,
 .ion-network:before,
@@ -730,7 +730,7 @@
 .ion-toggle-filled:before,
 .ion-transgender:before,
 .ion-trash-a:before,
-.ion-trash-b:before, .sfb-tools > li.sfb-tools_trash:before,
+.ion-trash-b:before, .fpb-tools > li.fpb-tools_trash:before,
 .ion-trophy:before,
 .ion-tshirt:before,
 .ion-tshirt-outline:before,
@@ -1426,7 +1426,7 @@
 .ion-erlenmeyer-flask-bubbles:before {
   content: "\F3C4"; }
 
-.ion-eye:before, .sfb-tools > li.sfb-tools_show:before {
+.ion-eye:before, .fpb-tools > li.fpb-tools_show:before {
   content: "\F133"; }
 
 .ion-eye-disabled:before {
@@ -1474,7 +1474,7 @@
 .ion-gear-a:before {
   content: "\F13D"; }
 
-.ion-gear-b:before, .sfb-tools > li.sfb-tools_edit:before {
+.ion-gear-b:before, .fpb-tools > li.fpb-tools_edit:before {
   content: "\F13E"; }
 
 .ion-grid:before {
@@ -2449,7 +2449,7 @@
 .ion-music-note:before {
   content: "\F20C"; }
 
-.ion-navicon:before, .sfb-tools > li.sfb-tools_handle:before {
+.ion-navicon:before, .fpb-tools > li.fpb-tools_handle:before {
   content: "\F20E"; }
 
 .ion-navicon-round:before {
@@ -2899,7 +2899,7 @@
 .ion-trash-a:before {
   content: "\F252"; }
 
-.ion-trash-b:before, .sfb-tools > li.sfb-tools_trash:before {
+.ion-trash-b:before, .fpb-tools > li.fpb-tools_trash:before {
   content: "\F253"; }
 
 .ion-trophy:before {
@@ -2962,45 +2962,45 @@
 .ion-xbox:before {
   content: "\F30C"; }
 
-[data-sfb-section] {
+[data-fpb-section] {
   position: relative; }
 
-.sfb-overlay {
+.fpb-overlay {
   width: 0;
   height: 0;
   display: none;
   z-index: 100; }
-  [data-sfb-section]:hover .sfb-overlay {
+  [data-fpb-section]:hover .fpb-overlay {
     display: block; }
-  .sfb-overlay span {
+  .fpb-overlay span {
     display: block;
     position: absolute; }
-  .sfb-overlay span:nth-child(1) {
+  .fpb-overlay span:nth-child(1) {
     border-top: 1px solid #eee;
     top: 10px;
     left: 10px;
     right: 10px;
     height: 0; }
-  .sfb-overlay span:nth-child(2) {
+  .fpb-overlay span:nth-child(2) {
     border-top: 1px solid #eee;
     bottom: 10px;
     left: 10px;
     right: 10px;
     height: 0; }
-  .sfb-overlay span:nth-child(3) {
+  .fpb-overlay span:nth-child(3) {
     border-left: 1px solid #eee;
     top: 10px;
     left: 10px;
     bottom: 10px;
     width: 0; }
-  .sfb-overlay span:nth-child(4) {
+  .fpb-overlay span:nth-child(4) {
     border-left: 1px solid #eee;
     top: 10px;
     right: 10px;
     bottom: 10px;
     width: 0; }
 
-.sfb-tools {
+.fpb-tools {
   position: absolute;
   display: none;
   top: 20px;
@@ -3011,9 +3011,9 @@
   border-radius: 3px;
   overflow: hidden;
   z-index: 101; }
-  [data-sfb-section]:hover .sfb-tools {
+  [data-fpb-section]:hover .fpb-tools {
     display: block; }
-  .sfb-tools > li {
+  .fpb-tools > li {
     background-color: #eee;
     display: block;
     float: left;
@@ -3023,19 +3023,44 @@
     font-size: 24px;
     padding-top: 3px;
     color: #999; }
-    .sfb-tools > li:hover {
+    .fpb-tools > li:hover {
       color: #000;
       background-color: #aaa; }
-    .sfb-tools > li.sfb-tools_handle {
+    .fpb-tools > li.fpb-tools_handle {
       cursor: move;
       font-size: 30px;
       padding-top: 0; }
-    .sfb-tools > li.sfb-tools_edit {
+    .fpb-tools > li.fpb-tools_edit {
       cursor: pointer; }
-    .sfb-tools > li.sfb-tools_trash {
+    .fpb-tools > li.fpb-tools_trash {
       cursor: pointer; }
-    .sfb-tools > li.sfb-tools_show {
+    .fpb-tools > li.fpb-tools_show {
       cursor: pointer; }
+
+.fcb-modal-component {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000; }
+  .fcb-modal-component .fcb-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(255, 255, 255, 0.5); }
+  .fcb-modal-component .fcb-modal {
+    position: fixed;
+    width: 100%;
+    background-color: #fff;
+    padding: 40px; }
+    @media screen and (min-width: 700px) {
+      .fcb-modal-component .fcb-modal {
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        width: 600px;
+        min-height: 300px; } }
 @charset "UTF-8";
 /*!
   Ionicons, v2.0.1

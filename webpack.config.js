@@ -15,13 +15,15 @@ module.exports = {
         // path: './mysite/'
     },
     devtool: 'source-map',
+    jshint: {
+        esversion: 6
+    },
     module: {
-        preLoaders: [{
-          test: /\.js$/, 
-          exclude: /node_modules/,
-          loader: 'jshint-loader',
-          esversion: 6
-        }],
+        // preLoaders: [{
+        //   test: /\.js$/,
+        //   exclude: /node_modules/,
+        //   loader: 'jshint-loader',
+        // }],
         loaders: [
             {
                 test: /\.scss|\.css$/,
@@ -37,10 +39,10 @@ module.exports = {
                 loader: "file-loader?name=fonts/[name].[ext]&context=./something",
             },
             {
-                test: /\.js$/,
+                test: /\.js|\.jsx$/,
                 loader: 'babel-loader',
                 query: {
-                    presets: ['es2015']
+                    presets: ['es2015', 'react', 'stage-0']
                 }
             }
           //   ,
@@ -66,7 +68,7 @@ module.exports = {
         }),
         new webpack.DefinePlugin({
           "process.env": {
-             NODE_ENV: JSON.stringify("production")
+             // NODE_ENV: JSON.stringify("production")
            }
         })
         // ,
