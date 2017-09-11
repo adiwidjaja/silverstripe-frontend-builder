@@ -39,11 +39,16 @@ module.exports = {
                 loader: "file-loader?name=fonts/[name].[ext]&context=./something",
             },
             {
-                test: /\.js|\.jsx$/,
+                test: /\.js$|\.jsx$/,
                 loader: 'babel-loader',
+                exclude: 'node_modules',
                 query: {
                     presets: ['es2015', 'react', 'stage-0']
                 }
+            },
+            {
+                test: /\.json$/,
+                loader: "json-loader"
             }
           //   ,
           // {
