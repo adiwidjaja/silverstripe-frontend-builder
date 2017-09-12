@@ -6,3 +6,4 @@
 .DS_Store
 composer.lock
 node_modules
+frontend-pagebuilder
