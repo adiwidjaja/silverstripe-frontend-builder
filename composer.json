@@ -1,0 +1,13 @@
+{
+    "name": "adiwidjaja/silverstripe-frontend-builder",
+    "type": "silverstripe-module",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Andy Adiwidjaja",
+            "email": "adiwidjaja@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {}
+}
