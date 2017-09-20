@@ -117,7 +117,7 @@ class BasePage_Controller extends ContentController {
     //Apply pre-save hooks
     function PrepareSaveSection($section) {
         $conf = Config::inst()->get("silverstripe-frontend-builder", "modules");
-        $section->content = BaseSection::create($section, $conf)->beforeSave($section->content, true);
+        $section->content = BaseSection::create($section, $conf)->beforeSave($section->content);
         return $section;
     }
 

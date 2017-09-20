@@ -22,20 +22,17 @@ class BaseSection {
         //Fetch dynamic lists
     }
 
-    public function beforeSave() {
+    public function beforeSave($content) {
         //Save, replace images. Shortcodes?
-        $section = $this->section;
-        print "HUHU";die();
-
-        foreach($section->content as $name => $value) {
+        foreach($content as $name => $value) {
             if(is_array($value)) {
                 //Children
             } else {
                 if(strpos($value, "data:image") === 0) {
-                    print "YEAH";die();
+                    // print "YEAH";die();
                     // DataUri::tryParse($value, $out);
-                    print "HUHU";
-                    print_r($out);die();
+                    // print "HUHU";
+                    // print_r($out);die();
                     // preg_match_all("/(url\(data:image\/(jpeg|gif|png);base64,(.*)\))/si", $value, $vdata);
                     // print_r($vdata);
                     // if (count($vdata[0])) {
@@ -50,6 +47,7 @@ class BaseSection {
                 }
             }
         }
+        return $content;
     }
 
     public function getSubSections() {
