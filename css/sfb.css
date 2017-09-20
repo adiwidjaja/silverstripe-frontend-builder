@@ -7929,7 +7929,7 @@
   height: 0;
   display: none;
   z-index: 100; }
-  [data-fpb-section]:hover .fpb-overlay {
+  [data-fpb-section]:hover > .fpb-overlay {
     display: block; }
   .fpb-overlay span {
     display: block;
@@ -7970,7 +7970,7 @@
   border-radius: 3px;
   overflow: hidden;
   z-index: 101; }
-  [data-fpb-section]:hover .fpb-tools {
+  [data-fpb-section]:hover > .fpb-tools {
     display: block; }
   .fpb-tools > li {
     background-color: #eee;

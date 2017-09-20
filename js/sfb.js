@@ -174,7 +174,7 @@
 	            var addelem = document.body.appendChild(document.createElement("div", { id: 'fpb-addlist-container' }));
 	            _reactDom2.default.render(_react2.default.createElement(_AddList2.default, { ref: function ref(addlist) {
 	                    _this.addlist = addlist;
-	                }, elements: editorconf.elements }), addelem);
+	                }, elements: editorconf.elements, groups: editorconf.groups }), addelem);
 	
 	            var modal = this.modal;
 	
@@ -23883,9 +23883,6 @@
 	        var _this = _possibleConstructorReturn(this, (EditorList.__proto__ || Object.getPrototypeOf(EditorList)).call(this, props));
 	
 	        _this.elementdefinitions = _this.props.defs;
-	        // this.state = {
-	        //     sectionlist: this.props.content
-	        // };
 	
 	        _this.onSort = _this.onSort.bind(_this);
 	        return _this;
@@ -23923,25 +23920,33 @@
 	            // console.log("Rerender EditorList");
 	            var output = [];
 	            var i = 0;
-	            this.props.sectionlist.getChildren().forEach(function (section) {
+	            var sections = this.props.sectionlist.getChildren();
+	            console.log(sections);
+	            sections.forEach(function (section) {
 	
 	                var elementdef = _this2.elementdefinitions[section.getType()];
 	                var template = elementdef.template;
 	
 	                // console.log(section);
 	
-	                output.push(_react2.default.createElement(_EditorSection2.default, { key: (0, _uniqueId2.default)(), id: i, section: section, elementdef: elementdef, modal: _this2.props.modal })); // component={Editable}
+	                output.push(_react2.default.createElement(_EditorSection2.default, { key: (0, _uniqueId2.default)(), id: i, section: section, elementdef: elementdef, defs: _this2.elementdefinitions, modal: _this2.props.modal })); // component={Editable}
 	                i++;
 	            });
+	
+	            var group = this.props.group ? this.props.group : 'default';
+	
+	            var classnames = this.props.extraclasses ? this.props.extraclasses + " fpb-list" : "fpb-list";
+	
+	            console.log("rerender " + group);
 	
 	            return _react2.default.createElement(
 	                _reactSortablejs2.default,
 	                {
 	                    options: {
 	                        handle: '.fpb-tools_handle',
-	                        group: 'elements'
+	                        group: group
 	                    },
-	                    className: 'fpb-list',
+	                    className: classnames,
 	                    onChange: this.onSort
 	                },
 	                output
@@ -23986,6 +23991,10 @@
 	
 	var _reactTinymce2 = _interopRequireDefault(_reactTinymce);
 	
+	var _EditorList = __webpack_require__(191);
+	
+	var _EditorList2 = _interopRequireDefault(_EditorList);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -24010,9 +24019,19 @@
 	        var _this = _possibleConstructorReturn(this, (EditorSection.__proto__ || Object.getPrototypeOf(EditorSection)).call(this, props));
 	
 	        _this.processingInstructions = [{
-	            // This is REQUIRED, it tells the parser
-	            // that we want to insert our React
-	            // component as a child
+	            replaceChildren: false,
+	            shouldProcessNode: function shouldProcessNode(node) {
+	                // return true;
+	                return node.attribs && node.attribs['data-sfb-childgroup'];
+	            },
+	            processNode: function processNode(node, children, index) {
+	                // console.log(children);
+	                var name = node.attribs['data-sfb-value'];
+	                var group = node.attribs['data-sfb-childgroup'];
+	                var extraclasses = node.attribs['class'];
+	                return _react2.default.createElement(_EditorList2.default, { group: group, sectionlist: _this.props.section.getChildList(name), defs: _this.props.defs, modal: _this.props.modal, extraclasses: extraclasses });
+	            }
+	        }, {
 	            replaceChildren: true,
 	            shouldProcessNode: function shouldProcessNode(node) {
 	                // return true;
@@ -24038,9 +24057,6 @@
 	                }, null);
 	            }
 	        }, {
-	            // This is REQUIRED, it tells the parser
-	            // that we want to insert our React
-	            // component as a child
 	            replaceChildren: true,
 	            shouldProcessNode: function shouldProcessNode(node) {
 	                // return true;
@@ -33426,9 +33442,9 @@
 	    function Content(editor, content) {
 	        _classCallCheck(this, Content);
 	
-	        this.sectionlist = new _SectionList2.default(this, content.sections);
+	        this.sectionlist = new _SectionList2.default("sectionlist", this, content.sections);
 	        this.editor = editor;
-	        this.onChange = this.onChange.bind(this);
+	        this.onChildrenChange = this.onChildrenChange.bind(this);
 	    }
 	
 	    _createClass(Content, [{
@@ -33437,11 +33453,11 @@
 	            return this.sectionlist;
 	        }
 	    }, {
-	        key: "onChange",
-	        value: function onChange(sectionlist, rerender) {
+	        key: "onChildrenChange",
+	        value: function onChildrenChange(name, sectionlist, rerender) {
 	            // console.log(sectionlist);
+	            this.sectionlist = sectionlist;
 	            if (rerender) {
-	                this.sectionlist = sectionlist;
 	                this.editor.onChange(this); //Or content?
 	            }
 	        }
@@ -33500,11 +33516,12 @@
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
 	var SectionList = function () {
-	    function SectionList(parent, sections) {
+	    function SectionList(name, parent, sections) {
 	        var _this = this;
 	
 	        _classCallCheck(this, SectionList);
 	
+	        this.name = name;
 	        this.parent = parent;
 	        this.sections = sections.map(function (sectiondata) {
 	            return new _Section2.default(_this, sectiondata);
@@ -33534,13 +33551,21 @@
 	            this.onChange(null, true);
 	        }
 	
-	        //Subelement changed
+	        //I changed
 	
 	    }, {
 	        key: "onChange",
 	        value: function onChange(content, rerender) {
-	            this.parent.onChange(this, rerender);
+	            if (rerender) this.parent.onChildrenChange(this.name, this, rerender);
 	        }
+	
+	        // //Subelement changed
+	        // onChildrenChange(content, rerender) {
+	        //     this.parent.onChildrenChange(
+	        //         this.name, this, rerender
+	        //     );
+	        // }
+	
 	    }, {
 	        key: "getData",
 	        value: function getData() {
@@ -33573,7 +33598,7 @@
 
 /***/ }),
 /* 404 */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
 	
@@ -33582,6 +33607,12 @@
 	});
 	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _SectionList = __webpack_require__(403);
+	
+	var _SectionList2 = _interopRequireDefault(_SectionList);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
@@ -33615,6 +33646,13 @@
 	        value: function getContent() {
 	            return this.data.content;
 	        }
+	    }, {
+	        key: "getChildList",
+	        value: function getChildList(name) {
+	            // console.log("subsection");
+	            // console.log(this.data);
+	            if (this.data.content[name] !== undefined) return new _SectionList2.default(name, this, this.data.content[name]);else return new _SectionList2.default(name, []);
+	        }
 	
 	        //TODO: Rename!
 	
@@ -33640,6 +33678,13 @@
 	        value: function onChange(content, rerender) {
 	            // console.log("Section.onChange");
 	            this.parent.onChange(this, rerender);
+	        }
+	    }, {
+	        key: "onChildrenChange",
+	        value: function onChildrenChange(name, sectionlist, rerender) {
+	            this.data.content[name] = sectionlist.getData();
+	            // console.log(this.data);
+	            this.onChange(this, true);
 	        }
 	    }]);
 	
@@ -43113,31 +43158,68 @@
 	    }, {
 	        key: 'render',
 	        value: function render() {
-	            var elements = [];
-	            for (var elementtype in this.props.elements) {
-	                var elementdef = this.props.elements[elementtype];
-	                if ('preview' in elementdef) {
-	                    elements.push(_react2.default.createElement(
-	                        'div',
-	                        { className: 'fpb-addlist-type', 'data-type': elementtype, key: (0, _uniqueId2.default)() },
-	                        _react2.default.createElement(
+	            var groups = [];
+	            for (var groupname in this.props.groups) {
+	                var groupdata = this.props.groups[groupname];
+	                var elements = [];
+	                for (var i in groupdata.elements) {
+	                    var elementtype = groupdata.elements[i];
+	                    var elementdef = this.props.elements[elementtype];
+	                    if ('preview' in elementdef) {
+	                        elements.push(_react2.default.createElement(
 	                            'div',
-	                            { className: 'fpb-addlist-type_content' },
-	                            _react2.default.createElement('img', { src: elementdef.preview })
-	                        )
-	                    ));
-	                } else {
-	                    elements.push(_react2.default.createElement(
-	                        'div',
-	                        { className: 'fpb-addlist-type', 'data-type': elementtype, key: (0, _uniqueId2.default)() },
-	                        _react2.default.createElement(
+	                            { className: 'fpb-addlist-type', 'data-type': elementtype, key: (0, _uniqueId2.default)() },
+	                            _react2.default.createElement(
+	                                'div',
+	                                { className: 'fpb-addlist-type_content' },
+	                                _react2.default.createElement('img', { src: elementdef.preview })
+	                            )
+	                        ));
+	                    } else {
+	                        elements.push(_react2.default.createElement(
 	                            'div',
-	                            { className: 'fpb-addlist-type_content' },
-	                            elementdef.name
-	                        )
-	                    ));
+	                            { className: 'fpb-addlist-type', 'data-type': elementtype, key: (0, _uniqueId2.default)() },
+	                            _react2.default.createElement(
+	                                'div',
+	                                { className: 'fpb-addlist-type_content' },
+	                                elementdef.name
+	                            )
+	                        ));
+	                    }
 	                }
+	                groups.push(_react2.default.createElement(
+	                    'div',
+	                    { className: 'fpb-addlist_group', key: groupname },
+	                    _react2.default.createElement(
+	                        'div',
+	                        { className: 'fpb-addlist_groupname' },
+	                        groupdata.name
+	                    ),
+	                    _react2.default.createElement(
+	                        _reactSortablejs2.default,
+	                        {
+	                            options: {
+	                                group: {
+	                                    name: groupname,
+	                                    pull: true,
+	                                    put: false
+	                                },
+	                                sort: false,
+	                                onClone: function onClone(evt) {
+	                                    // console.log(evt.item);
+	                                    // console.log(evt.from);
+	                                    // console.log(evt);
+	                                }
+	                            },
+	                            className: 'fpb-addlist_typelist'
+	                        },
+	                        elements
+	                    )
+	                ));
 	            }
+	            // for(let elementtype in this.props.elements) {
+	            //     const elementdef = this.props.elements[elementtype];
+	            // }
 	            return _react2.default.createElement(
 	                'div',
 	                { className: "fpb-addlist fpb " + (this.state.open ? "fpb-addlist--open" : "") },
@@ -43146,26 +43228,7 @@
 	                    { className: 'fpb-addlist_handle', onClick: this.toggle },
 	                    _react2.default.createElement('span', null)
 	                ),
-	                _react2.default.createElement(
-	                    _reactSortablejs2.default,
-	                    {
-	                        options: {
-	                            group: {
-	                                name: "elements",
-	                                pull: true,
-	                                put: false
-	                            },
-	                            sort: false,
-	                            onClone: function onClone(evt) {
-	                                // console.log(evt.item);
-	                                // console.log(evt.from);
-	                                // console.log(evt);
-	                            }
-	                        },
-	                        className: 'fpb-addlist_typelist'
-	                    },
-	                    elements
-	                )
+	                groups
 	            );
 	        }
 	    }]);

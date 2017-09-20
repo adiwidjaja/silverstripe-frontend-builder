@@ -58,7 +58,7 @@ class BaseSection {
         if(array_key_exists("subsections", $conf[$section->type])) {
             $subsectionlists = $conf[$section->type]["subsections"];
             foreach($subsectionlists as $subsectionlistname) {
-                $listcontent = $section->$subsectionlistname;
+                $listcontent = $section->content->$subsectionlistname;
                 $subsections[$subsectionlistname] = $listcontent;
             }
         }
