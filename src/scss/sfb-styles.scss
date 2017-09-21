@@ -21,6 +21,14 @@ $white_trans:rgba($white, 0.5);
         width:50%;
 
         &.sfb-publishing {
+            // div.save-status {
+            //     display:inline-block;
+            //     color:green;
+
+            //     &.save-status--changed {
+            //         color:red;
+            //     }
+            // }
             text-align:right;
         }
     }
@@ -29,4 +37,23 @@ $white_trans:rgba($white, 0.5);
 [data-fpb-content] {
     min-height:200px;
     // background-color:$grey;
+}
+
+.sfb-login {
+    position:fixed;
+    bottom:0;
+    left:0;
+    z-index:1000;
+    width:100px;
+    height:30px;
+
+    a {
+        opacity:0;
+        display:inline-block;
+        padding:10px 20px;
+
+        &:hover {
+            opacity:1;
+        }
+    }
 }

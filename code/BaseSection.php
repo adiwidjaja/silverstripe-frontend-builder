@@ -1,5 +1,7 @@
 <?php
 
+use EVought\DataUri\DataUri;
+
 class BaseSection {
 
     public function __construct($section, $conf) {
@@ -22,6 +24,30 @@ class BaseSection {
         //Fetch dynamic lists
     }
 
+    function getExtension($mimetype) {
+        if(empty($mimetype)) return "";
+        switch($mimetype)
+        {
+            case 'image/gif': return '.gif';
+            case 'image/jpeg': return '.jpg';
+            case 'image/png': return '.png';
+            case 'application/pdf': return '.pdf';
+            default:
+                $mimearray = explode("/", $mimetype);
+                return array_pop($mimearray);
+        }
+    }
+
+    public function isImage($mimetype) {
+
+        if(empty($mimetype)) return false;
+
+        if(in_array($mimetype, array('image/gif', 'image/jpeg', 'image/png')))
+            return true;
+        return false;
+
+    }
+
     public function beforeSave($content) {
         //Save, replace images. Shortcodes?
         foreach($content as $name => $value) {
@@ -29,21 +55,43 @@ class BaseSection {
                 //Children
             } else {
                 if(strpos($value, "data:image") === 0) {
-                    // print "YEAH";die();
-                    // DataUri::tryParse($value, $out);
-                    // print "HUHU";
-                    // print_r($out);die();
-                    // preg_match_all("/(url\(data:image\/(jpeg|gif|png);base64,(.*)\))/si", $value, $vdata);
-                    // print_r($vdata);
-                    // if (count($vdata[0])) {
-                    //     for($i=0;$i<count($vdata[0]);$i++) {
-                    //         $file = Director::baseFolder()."assets/autoupload".'_tempCSSidata'.RAND(1,10000).'_'.$i.'.'.$idata[2][$i];
-                    //         print $file;die();
-                    //         //Save to local file
-                    //         file_put_contents($file, base64_decode($idata[3][$i]));
-                    //         // $CSSstr = str_replace($idata[0][$i], 'url("'.$file.'")', $CSSstr);  // mPDF 5.5.17
-                    //     }
-                    // }
+                    DataUri::tryParse($value, $data);
+
+                    $mediaType = explode(";", $data->getMediaType());
+                    $mime = $mediaType[0];
+
+                    $filetype = $this->getExtension($mime);
+
+                    $folder = Folder::find_or_make("autoupload");
+                    $filename = 'upload_'.RAND(1,10000).$filetype;
+                    $filepath = Director::baseFolder()."/assets/autoupload/".$filename;
+                    $relfilepath = "assets/autoupload/".$filename;
+                    file_put_contents($filepath, base64_decode($data->getEncodedData()));
+
+                    if($this->isImage($mime)) {
+                        $image = new Image(array(
+                            "Filename" => $relfilepath,
+                            "ParentID" => $folder->ID,
+                            "Name" => $filename,
+                            "Title" => $filename
+                        ));
+                        $image->write();
+
+                        $realname = str_replace("load_", "", $name);
+                        unset($content->$name);
+                        $content->$realname = "image:".$image->ID;
+                    } else {
+                        $file = new File(array(
+                            "Filename" => $relfilepath,
+                            "ParentID" => $folder->ID,
+                            "Name" => $filename,
+                            "Title" => $filename
+                        ));
+                        $file->write();
+                        $realname = str_replace("load_", "", $name);
+                        unset($content->$name);
+                        $content->$realname = "file:".$file->ID;
+                    }
                 }
             }
         }
@@ -83,6 +131,19 @@ class BaseSection {
         }
 
         //Render images here
+        foreach($content as $name => $value) {
+            if(is_array($value)) {
+                continue;
+            }
+            if(strpos($value, "image:") === 0) {
+                $id = intval(str_replace("image:", "", $value));
+                $image = Image::get()->byId($id);
+
+                //Resize here
+                $content->$name = $image->URL;
+            }
+        }
+
         return $content;
     }
 

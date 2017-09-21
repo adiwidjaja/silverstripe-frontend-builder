@@ -129,6 +129,11 @@ class BasePage_Controller extends ContentController {
         $page = $this->data();
         $page->PageContent = $content;
         $page->write();
+
+        //Return modified json
+        $content = $this->prepareJsonContent($content);
+        $this->getResponse()->addHeader('Content-Type', 'application/json');
+        return json_encode($content);
     }
 
     //Move to global controller function
