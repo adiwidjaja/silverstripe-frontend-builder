@@ -49,10 +49,21 @@ class BaseSection {
     }
 
     public function beforeSave($content) {
-        //Save, replace images. Shortcodes?
+        $conf = $this->conf;
+
+        foreach($this->getSubSections() as $name => $listcontent) {
+                $preparedlist = [];
+                foreach($listcontent as $subsection) {
+                     $subsection->content = BaseSection::create($subsection, $conf)->beforeSave($subsection->content);
+                     $preparedlist[] = $subsection;
+                }
+                $content->$name = $preparedlist;
+        }
+
+        //Save, replace images
         foreach($content as $name => $value) {
             if(is_array($value)) {
-                //Children
+                //Skip children
             } else {
                 if(strpos($value, "data:image") === 0) {
                     DataUri::tryParse($value, $data);
