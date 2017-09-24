@@ -5,9 +5,29 @@ $black:#000;
 $white:#fff;
 $white_trans:rgba($white, 0.5);
 
+.fpb > a.sfb-logo {
+    display:inline-block;
+    width:30px;
+    height:30px;
+    margin-left:10px;
+    text-align:center;
+    background-color:$black;
+    color:$white;
+    border-radius:50%;
+    padding:10px 5px;
+    font-weight:bold;
+    font-size:9px;
+
+    &:hover {
+        background-color:$darkgrey;
+        // color:$black;
+        text-decoration:none;
+    }
+}
+
 .sfb-nav {
     position:fixed;
-    bottom:0;
+    top:0;
     left:0;
     z-index:1000;
     width:100%;
@@ -16,6 +36,7 @@ $white_trans:rgba($white, 0.5);
     padding:10px;
 
     display:flex;
+
 
     > div {
         width:50%;
@@ -44,16 +65,23 @@ $white_trans:rgba($white, 0.5);
     bottom:0;
     left:0;
     z-index:1000;
-    width:100px;
-    height:30px;
+    width:140px;
+    height:40px;
+    background-color:transparent;
+    opacity:0;
+
+    &:hover {
+        background-color:$white;
+        opacity:1;
+    }
 
     a {
-        opacity:0;
         display:inline-block;
         padding:10px 20px;
+        text-decoration:none;
 
         &:hover {
-            opacity:1;
+            text-decoration:none;
         }
     }
 }

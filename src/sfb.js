@@ -46,7 +46,7 @@ $.get(baseurl+"editorconf", function(conf) {
         }, "json");
     }
 
-    fpb.init("[data-fpb-content]", editordata, conf);
+    fpb.init("[data-fpb-content]", editordata, conf, editmode);
 
     $("#sfb-save-page").click(function() {
         saveContent();

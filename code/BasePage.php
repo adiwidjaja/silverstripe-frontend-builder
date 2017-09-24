@@ -7,9 +7,18 @@ class BasePage extends SiteTree {
     public function getCMSFields() {
         $fields = parent::getCMSFields();
         $fields->removeByName("Content");
-        $fields->addFieldToTab("Root.Main", new TextareaField("PageContent", "Inhalt"));
+        // $fields->addFieldToTab("Root.Main", new TextareaField("PageContent", "Inhalt"));
         // $fields->replaceField("Content", new TextareaField("PageContent", "Inhalt"));
+        $this->extend('updateCMSFields', $fields);
         return $fields;
+    }
+
+    public function CurrentLocaleInformation() {
+        return $this->LocaleInformation($this->CurrentLocale());
+    }
+
+    public function CurrentLanguage() {
+        return explode("_", $this->CurrentLocale())[0];
     }
 
 }
@@ -24,6 +33,10 @@ class BasePage_Controller extends ContentController {
     );
     function CurrentVersion() {
         return Versioned::current_stage();
+    }
+
+    function BaseAdminLink() {
+        return Config::inst()->get("silverstripe-frontend-builder", "base-admin-link");
     }
 
     function EditMode() {
@@ -98,10 +111,6 @@ class BasePage_Controller extends ContentController {
 
     function rollback() {
         $this->performRollback($this->ClassName, $this->ID, "Live");
-        Versioned::reading_stage('Live');
-        foreach($this->getComponents("Widgets") as $widget) {
-            $this->performRollback($widget->ClassName, $widget->ID, "Live");
-        }
         $this->redirect($this->Link()."?stage=Stage");
     }
 
@@ -158,7 +167,7 @@ class BasePage_Controller extends ContentController {
                 fclose($handle);
                 $formdef_json = json_decode($formdef);
             } else {
-                $formdef = [];
+                $formdef_json = null;
             }
 
             $data["elements"][$name] = array(
