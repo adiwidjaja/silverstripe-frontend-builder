@@ -8011,6 +8011,9 @@
   .fpb-modal-component .fpb-modal {
     position: fixed;
     width: 100%; }
+    .fpb-modal-component .fpb-modal .modal-body {
+      max-height: 80vh;
+      overflow: auto; }
     @media screen and (min-width: 700px) {
       .fpb-modal-component .fpb-modal {
         left: 50%;
