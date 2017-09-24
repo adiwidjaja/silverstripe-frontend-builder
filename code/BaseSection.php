@@ -142,8 +142,16 @@ class BaseSection {
         return $subsections;
     }
 
+    public function getImageInfos() {
+        $conf = $this->conf[$this->section->type];
+        if(!isset($conf["images"]))
+            return [];
+        return $conf["images"];
+    }
+
     public function renderImages($content, $ignore=[]) {
-        //Render images here
+        $image_infos = $this->getImageInfos();
+
         foreach($content as $name => $value) {
             if(in_array($name, $ignore)) {
                 continue; //Skip subsections
@@ -158,6 +166,12 @@ class BaseSection {
                     if(strpos($value, "image:") === 0) {
                         $id = intval(str_replace("image:", "", $value));
                         $image = Image::get()->byId($id);
+
+
+                        if($image_infos && isset($image_infos[$name])) {
+                            $info = $image_infos[$name];
+                            $image = $image->getFormattedImage($info["method"], isset($info["width"])?$info["width"]:0, isset($info["height"])?$info["height"]:0);
+                        }
 
                         //Resize here
                         $content->$name = $image->URL;
@@ -201,7 +215,7 @@ class BaseSection {
         $base_path = Director::baseFolder();
         $template = file_get_contents($base_path."/".$templatesrc);
 
-        $content = $this->beforeRender($section->content, false);
+        $content = $this->beforeRender($section->content, true);
 
         //Subsections
         foreach($this->getSubSections() as $name => $listcontent) {
