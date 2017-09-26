@@ -207,10 +207,11 @@ class BaseSection {
 
                         if($image_infos && isset($image_infos[$realname])) {
                             $info = $image_infos[$realname];
-                            $image = $image->getFormattedImage($info["method"], isset($info["width"])?$info["width"]:0, isset($info["height"])?$info["height"]:0);
+                            if($image)
+                                $image = $image->getFormattedImage($info["method"], isset($info["width"])?$info["width"]:0, isset($info["height"])?$info["height"]:0);
                         }
-
-                        $content->$realname = $image->URL;
+                        if($image)
+                            $content->$realname = $image->URL;
                     }
                 }
             }
