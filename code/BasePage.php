@@ -30,6 +30,7 @@ class BasePage_Controller extends ContentController {
         'savecontent',
         'editorconf',
         'login',
+        'saveform'
     );
     function CurrentVersion() {
         return Versioned::current_stage();
@@ -145,35 +146,78 @@ class BasePage_Controller extends ContentController {
         return json_encode($content);
     }
 
+    function saveform() {
+        $newpage = $this->getRequest()->postVar("NewPage");
+        $content = $this->getRequest()->postVar("FormData");
+
+        if($newpage) {
+            $item = new Page();
+            $item->ParentID = $this->ID;
+            $item->URLSegment = $content['Title'];
+        } else {
+            $item = $this->data();
+        }
+        foreach($content as $name => $value) {
+            $item->$name = $value;
+        }
+        $item->write();
+
+
+        return $item->Link();
+    }
+
     //Move to global controller function
     function editorconf() {
         $groups = Config::inst()->get("silverstripe-frontend-builder", "groups");
         $modules = Config::inst()->get("silverstripe-frontend-builder", "modules");
         $base_path = Director::baseFolder();
         $data = array(
+            "editform" => [
+                "title" => "Seite bearbeiten",
+                "description" => "",
+                "type" => "object",
+                "required" => [
+                    "Title"
+                ],
+                "properties" => [
+                    "Title" => [
+                        "type" => "string",
+                        "title"=> "Titel"
+                    ],
+                    "ShowInMenus" => [
+                        "type" => "boolean",
+                        "title"=> "In Menüs anzeigen",
+                        "default" => true
+                    ],
+                    "MetaTitle" => [
+                        "type" => "string",
+                        "title"=> "Meta-Titel"
+                    ],
+                    "MetaDescription" => [
+                        "type" => "string",
+                        "title"=> "Meta-Description"
+                    ]
+                ]
+            ],
+            "pagedata" => [
+                "Title" => $this->Title,
+                "ShowInMenus" => $this->ShowInMenus?true:false
+            ],
             "groups" => $groups,
             "elements" => array()
         );
         foreach($modules as $name => $moduleconf) {
-            $templatefile = $base_path."/".$moduleconf["template"];
-            $handle = fopen($templatefile, "r");
-            $template = fread($handle, filesize($templatefile));
-            fclose($handle);
 
-            if(array_key_exists("formdef", $moduleconf)) {
-                $formdeffile = $base_path."/".$moduleconf["formdef"];
-                $handle = fopen($formdeffile, "r");
-                $formdef = fread($handle, filesize($formdeffile));
-                fclose($handle);
-                $formdef_json = json_decode($formdef);
-            } else {
-                $formdef_json = null;
-            }
+            $section = BaseSection::createabstract($name, $modules);
+
+            $template = $section->getTemplate();
+
+            $formdef = $section->getFormDef();
 
             $data["elements"][$name] = array(
                 "name" => $moduleconf["name"],
                 "template" => $template,
-                "formdef" => $formdef_json
+                "formdef" => $formdef
             );
         }
         $this->getResponse()->addHeader('Content-Type', 'application/json');

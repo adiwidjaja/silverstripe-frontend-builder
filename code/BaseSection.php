@@ -4,24 +4,58 @@ use EVought\DataUri\DataUri;
 
 class BaseSection {
 
-    public function __construct($section, $conf) {
+    public function __construct($type, $conf, $section=null) {
+        $this->type = $type;
         $this->section = $section;
         $this->conf = $conf;
     }
 
     //Abstract factory
+    //Needs conf to create subobjects
     public static function create($section, $conf) {
         $class = "BaseSection";
 
         if(array_key_exists("class", $conf[$section->type])) {
             $class = $conf[$section->type]["class"];
         }
-        //TODO: Lookup section classes
-        return new $class($section, $conf);
+        return new $class($section->type, $conf, $section);
+    }
+
+    //Create without instance
+    public static function createabstract($type, $conf) {
+        $class = "BaseSection";
+
+        if(array_key_exists("class", $conf[$type])) {
+            $class = $conf[$type]["class"];
+        }
+        return new $class($type, $conf);
+    }
+
+    public function getTemplate() {
+        $base_path = Director::baseFolder();
+        $moduleconf = $this->conf[$this->type];
+
+        $templatefile = $base_path."/".$moduleconf["template"];
+        $handle = fopen($templatefile, "r");
+        $template = fread($handle, filesize($templatefile));
+        fclose($handle);
+        return $template;
     }
 
     public function getFormDef() {
-        //Fetch dynamic lists
+        $base_path = Director::baseFolder();
+        $moduleconf = $this->conf[$this->type];
+
+        if(array_key_exists("formdef", $moduleconf)) {
+            $formdeffile = $base_path."/".$moduleconf["formdef"];
+            $handle = fopen($formdeffile, "r");
+            $formdef = fread($handle, filesize($formdeffile));
+            fclose($handle);
+            $formdef_json = json_decode($formdef, true);
+        } else {
+            $formdef_json = null;
+        }
+        return $formdef_json;
     }
 
     function getExtension($mimetype) {
