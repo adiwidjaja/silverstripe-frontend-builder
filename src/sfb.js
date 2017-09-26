@@ -61,8 +61,11 @@ $.get(baseurl+"editorconf", function(conf) {
             const data = {
                 'FormData': formdata
             }
-            $.post(baseurl+"saveform", data, function(feedback) {
-                window.location.reload();
+            $.post(baseurl+"saveform", data, function(newurl) {
+                if(newurl == window.location.href)
+                    window.location.reload();
+                else
+                    window.location.href = newurl;
             })
         });
     })

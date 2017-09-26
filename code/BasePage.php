@@ -184,6 +184,14 @@ class BasePage_Controller extends ContentController {
                         "type" => "string",
                         "title"=> "Titel"
                     ],
+                    "MenuTitle" => [
+                        "type" => "string",
+                        "title"=> "Menü-Titel"
+                    ],
+                    "URLSegment" => [
+                        "type" => "string",
+                        "title"=> "URL-Segment"
+                    ],
                     "ShowInMenus" => [
                         "type" => "boolean",
                         "title"=> "In Menüs anzeigen",
@@ -191,17 +199,23 @@ class BasePage_Controller extends ContentController {
                     ],
                     "MetaTitle" => [
                         "type" => "string",
-                        "title"=> "Meta-Titel"
+                        "title"=> "Meta-Titel",
+                        "default" => ""
                     ],
                     "MetaDescription" => [
                         "type" => "string",
-                        "title"=> "Meta-Description"
+                        "title"=> "Meta-Description",
+                        "default" => ""
                     ]
                 ]
             ],
             "pagedata" => [
                 "Title" => $this->Title,
-                "ShowInMenus" => $this->ShowInMenus?true:false
+                "MenuTitle" => $this->Title,
+                "ShowInMenus" => $this->ShowInMenus?true:false,
+                "URLSegment" => $this->URLSegment,
+                "MetaTitle" => $this->MetaTitle?$this->MetaTitle:"",
+                "MetaDescription" => $this->MetaDescription?$this->MetaDescription:""
             ],
             "groups" => $groups,
             "elements" => array()
