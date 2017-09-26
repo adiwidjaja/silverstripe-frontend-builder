@@ -30,7 +30,9 @@ class BasePage_Controller extends ContentController {
         'savecontent',
         'editorconf',
         'login',
-        'saveform'
+        'saveform',
+        "EditForm",
+        "edit"
     );
     function CurrentVersion() {
         return Versioned::current_stage();
@@ -236,6 +238,36 @@ class BasePage_Controller extends ContentController {
         }
         $this->getResponse()->addHeader('Content-Type', 'application/json');
         return json_encode($data);
+    }
+
+    function EditFields() {
+        $fields = new FieldList();
+        $fields->push( new TextField( 'Title', _t("Newsroom.PAGETITLE","Seiten-Titel") ) );
+        $fields->push( new TextField( 'MenuTitle', _t("Newsroom.MENUTITLE","Navigations-Name") ) );
+        return $fields;
+    }
+
+    function EditForm() {
+        $fields = $this->EditFields();
+        $actions = new FieldList(
+            new FormAction('save', _t("Page.SAVE","Sichern"))
+        );
+        $validator = new RequiredFields('Title');
+        $form = new Form($this, 'EditForm',$fields, $actions,$validator);
+        $form->loadDataFrom($this);
+        return $form;
+    }
+
+    function save($data, $form) {
+        $item = $this->data();
+        $form->saveInto($item);
+        $item->write();
+        $this->redirect($this->Link()."?stage=Stage");
+    }
+
+    function edit() {
+        $template = SSViewer::fromString("\$Form");
+        return $this->renderWith($template, [ "Form" => $this->EditForm() ]);
     }
 
 }

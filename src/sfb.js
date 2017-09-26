@@ -55,33 +55,48 @@ $.get(baseurl+"editorconf", function(conf) {
         saveContent();
     })
 
+    // $("#sfb-edit-page").click(function(e) {
+    //     e.preventDefault();
+    //     fpb.getModal().showForm(editform, pagedata, "Seiteneigenschaften", function(formdata) {
+    //         const data = {
+    //             'FormData': formdata
+    //         }
+    //         $.post(baseurl+"saveform", data, function(newurl) {
+    //             if(newurl == window.location.href)
+    //                 window.location.reload();
+    //             else
+    //                 window.location.href = newurl;
+    //         })
+    //     });
+    // })
     $("#sfb-edit-page").click(function(e) {
         e.preventDefault();
-        fpb.getModal().showForm(editform, pagedata, "Seiteneigenschaften", function(formdata) {
-            const data = {
-                'FormData': formdata
-            }
-            $.post(baseurl+"saveform", data, function(newurl) {
-                if(newurl == window.location.href)
-                    window.location.reload();
-                else
-                    window.location.href = newurl;
-            })
+        $.get(baseurl+"edit", function(loadedform) {
+            fpb.getModal().showModal(loadedform, "Seiteneigenschaften", function() {
+            });
         });
     })
+    // $("#sfb-new-page").click(function(e) {
+    //     e.preventDefault();
+    //     fpb.getModal().showForm(editform, {}, "Seiteneigenschaften", function(formdata) {
+    //         const data = {
+    //             'NewPage': 1,
+    //             'FormData': formdata
+    //         }
+    //         $.post(baseurl+"saveform", data, function(newurl) {
+    //             if(newurl == window.location.href)
+    //                 window.location.reload();
+    //             else
+    //                 window.location.href = newurl;
+    //         })
+    //     });
+    // })
+
     $("#sfb-new-page").click(function(e) {
         e.preventDefault();
-        fpb.getModal().showForm(editform, {}, "Seiteneigenschaften", function(formdata) {
-            const data = {
-                'NewPage': 1,
-                'FormData': formdata
-            }
-            $.post(baseurl+"saveform", data, function(newurl) {
-                if(newurl == window.location.href)
-                    window.location.reload();
-                else
-                    window.location.href = newurl;
-            })
+        $.get(baseurl+"edit", function(loadedform) {
+            fpb.getModal().showModal(loadedform, {}, "Seiteneigenschaften", function() {
+            });
         });
     })
 
