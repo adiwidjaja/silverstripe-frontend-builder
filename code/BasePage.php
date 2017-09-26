@@ -7,7 +7,7 @@ class BasePage extends SiteTree {
     public function getCMSFields() {
         $fields = parent::getCMSFields();
         $fields->removeByName("Content");
-        // $fields->addFieldToTab("Root.Main", new TextareaField("PageContent", "Inhalt"));
+        $fields->addFieldToTab("Root.Main", new TextareaField("PageContent", "Inhalt"));
         // $fields->replaceField("Content", new TextareaField("PageContent", "Inhalt"));
         $this->extend('updateCMSFields', $fields);
         return $fields;
