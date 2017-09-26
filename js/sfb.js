@@ -133,7 +133,7 @@
 	    (0, _jquery2.default)("#sfb-edit-page").click(function (e) {
 	        e.preventDefault();
 	        _jquery2.default.get(baseurl + "edit", function (loadedform) {
-	            fpb.getModal().showModal(loadedform, "Seiteneigenschaften", function () {});
+	            fpb.getModal().showModal(loadedform, "Seiteneigenschaften", false);
 	        });
 	    });
 	    // $("#sfb-new-page").click(function(e) {
@@ -154,8 +154,8 @@
 	
 	    (0, _jquery2.default)("#sfb-new-page").click(function (e) {
 	        e.preventDefault();
-	        _jquery2.default.get(baseurl + "edit", function (loadedform) {
-	            fpb.getModal().showModal(loadedform, {}, "Seiteneigenschaften", function () {});
+	        _jquery2.default.get(baseurl + "add", function (loadedform) {
+	            fpb.getModal().showModal(loadedform, "Neue Seite", false);
 	        });
 	    });
 	
@@ -23748,7 +23748,7 @@
 	            if (event.keyCode == 27) {
 	                this.props.hideModal();
 	            }
-	            if (event.keyCode == 13 && this.props.onOk) {
+	            if (this.props.showOk && event.keyCode == 13 && this.props.onOk) {
 	                this.onOk();
 	            }
 	        }
@@ -24185,6 +24185,7 @@
 	                        toolbar: 'undo redo | bold italic subscript superscript | code',
 	                        menubar: false,
 	                        forced_root_block: "",
+	                        paste_as_text: true,
 	                        force_br_newlines: true,
 	                        force_p_newlines: false,
 	                        setup: function setup(ref) {
@@ -24228,7 +24229,8 @@
 	                    config: {
 	                        inline: true,
 	                        menubar: false,
-	                        plugins: "lists link",
+	                        paste_as_text: true,
+	                        plugins: "paste lists link code",
 	                        language: 'de',
 	                        toolbar: "undo redo | styleselect | bold italic subscript superscript | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link | code",
 	                        setup: function setup(ref) {
@@ -33922,11 +33924,13 @@
 	    _createClass(ModalForm, [{
 	        key: "showModal",
 	        value: function showModal(content, title) {
+	            var showok = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
+	
 	            this.setState({
 	                showmodal: true,
 	                content: content,
 	                title: title,
-	                showok: true
+	                showok: showok
 	            });
 	        }
 	    }, {
@@ -43346,7 +43350,7 @@
 	                for (var i in groupdata.elements) {
 	                    var elementtype = groupdata.elements[i];
 	                    var elementdef = this.props.elements[elementtype];
-	                    if ('preview' in elementdef) {
+	                    if ('preview' in elementdef && elementdef.preview) {
 	                        elements.push(_react2.default.createElement(
 	                            'div',
 	                            { className: 'fpb-addlist-type', 'data-type': elementtype, key: (0, _uniqueId2.default)() },
@@ -43362,7 +43366,7 @@
 	                            { className: 'fpb-addlist-type', 'data-type': elementtype, key: (0, _uniqueId2.default)() },
 	                            _react2.default.createElement(
 	                                'div',
-	                                { className: 'fpb-addlist-type_content' },
+	                                { className: 'fpb-addlist-type_content fpb-addlist-type_content--text' },
 	                                elementdef.name
 	                            )
 	                        ));
@@ -43409,7 +43413,11 @@
 	                    { className: 'fpb-addlist_handle', onClick: this.toggle },
 	                    _react2.default.createElement('span', null)
 	                ),
-	                groups
+	                _react2.default.createElement(
+	                    'div',
+	                    { className: 'fpb-addlist_groups' },
+	                    groups
+	                )
 	            );
 	        }
 	    }]);

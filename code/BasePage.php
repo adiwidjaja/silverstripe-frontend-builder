@@ -3,6 +3,9 @@ class BasePage extends SiteTree {
     private static $db = [
         "PageContent" => "Text"
     ];
+    private static $defaults = [
+        "Title" => "Neue Unterseite"
+    ];
 
     public function getCMSFields() {
         $fields = parent::getCMSFields();
@@ -21,6 +24,22 @@ class BasePage extends SiteTree {
         return explode("_", $this->CurrentLocale())[0];
     }
 
+    function EditFields() {
+        $fields = new FieldList();
+        $fields->push( new TextField( 'Title', $this->fieldLabel('Title') ) );
+        $fields->push( new TextField( 'MenuTitle', $this->fieldLabel('MenuTitle') ) );
+        $fields->push( new CheckboxField( 'ShowInMenus', $this->fieldLabel('ShowInMenus') ) );
+        $fields->push( new TextField( 'MetaTitle', $this->fieldLabel('MetaTitle') ) );
+        $fields->push( new TextareaField( 'MetaDescription', $this->fieldLabel('MetaDescription') ) );
+        return $fields;
+    }
+
+    public function NewChildClass() {
+        if(sizeof($this->data()->stat('allowed_children')) == 0)
+            return null;
+        return $this->data()->stat('default_child');
+    }
+
 }
 class BasePage_Controller extends ContentController {
 
@@ -32,7 +51,9 @@ class BasePage_Controller extends ContentController {
         'login',
         'saveform',
         "EditForm",
-        "edit"
+        "edit",
+        "AddForm",
+        "add"
     );
     function CurrentVersion() {
         return Versioned::current_stage();
@@ -174,86 +195,79 @@ class BasePage_Controller extends ContentController {
         $modules = Config::inst()->get("silverstripe-frontend-builder", "modules");
         $base_path = Director::baseFolder();
         $data = array(
-            "editform" => [
-                "title" => "Seite bearbeiten",
-                "description" => "",
-                "type" => "object",
-                "required" => [
-                    "Title"
-                ],
-                "properties" => [
-                    "Title" => [
-                        "type" => "string",
-                        "title"=> "Titel"
-                    ],
-                    "MenuTitle" => [
-                        "type" => "string",
-                        "title"=> "Menü-Titel"
-                    ],
-                    "URLSegment" => [
-                        "type" => "string",
-                        "title"=> "URL-Segment"
-                    ],
-                    "ShowInMenus" => [
-                        "type" => "boolean",
-                        "title"=> "In Menüs anzeigen",
-                        "default" => true
-                    ],
-                    "MetaTitle" => [
-                        "type" => "string",
-                        "title"=> "Meta-Titel",
-                        "default" => ""
-                    ],
-                    "MetaDescription" => [
-                        "type" => "string",
-                        "title"=> "Meta-Description",
-                        "default" => ""
-                    ]
-                ]
-            ],
-            "pagedata" => [
-                "Title" => $this->Title,
-                "MenuTitle" => $this->Title,
-                "ShowInMenus" => $this->ShowInMenus?true:false,
-                "URLSegment" => $this->URLSegment,
-                "MetaTitle" => $this->MetaTitle?$this->MetaTitle:"",
-                "MetaDescription" => $this->MetaDescription?$this->MetaDescription:""
-            ],
+            // "editform" => [
+            //     "title" => "Seite bearbeiten",
+            //     "description" => "",
+            //     "type" => "object",
+            //     "required" => [
+            //         "Title"
+            //     ],
+            //     "properties" => [
+            //         "Title" => [
+            //             "type" => "string",
+            //             "title"=> "Titel"
+            //         ],
+            //         "MenuTitle" => [
+            //             "type" => "string",
+            //             "title"=> "Menü-Titel"
+            //         ],
+            //         "URLSegment" => [
+            //             "type" => "string",
+            //             "title"=> "URL-Segment"
+            //         ],
+            //         "ShowInMenus" => [
+            //             "type" => "boolean",
+            //             "title"=> "In Menüs anzeigen",
+            //             "default" => true
+            //         ],
+            //         "MetaTitle" => [
+            //             "type" => "string",
+            //             "title"=> "Meta-Titel",
+            //             "default" => ""
+            //         ],
+            //         "MetaDescription" => [
+            //             "type" => "string",
+            //             "title"=> "Meta-Description",
+            //             "default" => ""
+            //         ]
+            //     ]
+            // ],
+            // "pagedata" => [
+            //     "Title" => $this->Title,
+            //     "MenuTitle" => $this->Title,
+            //     "ShowInMenus" => $this->ShowInMenus?true:false,
+            //     "URLSegment" => $this->URLSegment,
+            //     "MetaTitle" => $this->MetaTitle?$this->MetaTitle:"",
+            //     "MetaDescription" => $this->MetaDescription?$this->MetaDescription:""
+            // ],
             "groups" => $groups,
             "elements" => array()
         );
+
         foreach($modules as $name => $moduleconf) {
-
             $section = BaseSection::createabstract($name, $modules);
-
             $template = $section->getTemplate();
-
             $formdef = $section->getFormDef();
+            $preview = $section->getPreview();
 
             $data["elements"][$name] = array(
                 "name" => $moduleconf["name"],
                 "template" => $template,
-                "formdef" => $formdef
+                "formdef" => $formdef,
+                "preview" => $preview
             );
         }
         $this->getResponse()->addHeader('Content-Type', 'application/json');
         return json_encode($data);
     }
 
-    function EditFields() {
-        $fields = new FieldList();
-        $fields->push( new TextField( 'Title', _t("Newsroom.PAGETITLE","Seiten-Titel") ) );
-        $fields->push( new TextField( 'MenuTitle', _t("Newsroom.MENUTITLE","Navigations-Name") ) );
-        return $fields;
-    }
-
     function EditForm() {
         $fields = $this->EditFields();
         $actions = new FieldList(
-            new FormAction('save', _t("Page.SAVE","Sichern"))
+            FormAction::create('save', _t("Page.SAVE","Sichern"))->setStyle("primary")
         );
         $validator = new RequiredFields('Title');
-        $form = new Form($this, 'EditForm',$fields, $actions,$validator);
+        $form = BootstrapForm::create($this, 'EditForm',$fields, $actions,$validator);
         $form->loadDataFrom($this);
         return $form;
     }
@@ -268,6 +282,35 @@ class BasePage_Controller extends ContentController {
     function edit() {
         $template = SSViewer::fromString("\$Form");
         return $this->renderWith($template, [ "Form" => $this->EditForm() ]);
+    }
+
+    function AddForm() {
+        $addclass = $this->data()->stat('default_child');
+
+        $addmodel = singleton($addclass);
+
+        $fields = $addmodel->EditFields();
+        $actions = new FieldList(
+            FormAction::create('saveAdd', _t("Page.SAVE","Sichern"))->setStyle("primary")
+        );
+        $validator = new RequiredFields('Title');
+        $form = BootstrapForm::create($this, 'AddForm',$fields, $actions,$validator);
+        $form->loadDataFrom($addmodel);
+        return $form;
+    }
+
+    function saveAdd($data, $form) {
+        $addclass = $this->data()->stat('default_child');
+        $item = $addclass::create();
+        $form->saveInto($item);
+        $item->ParentID = $this->ID;
+        $item->write();
+        $this->redirect($item->Link()."?stage=Stage");
+    }
+
+    function add() {
+        $template = SSViewer::fromString("\$Form");
+        return $this->renderWith($template, [ "Form" => $this->AddForm() ]);
     }
 
 }

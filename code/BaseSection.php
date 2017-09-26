@@ -58,6 +58,16 @@ class BaseSection {
         return $formdef_json;
     }
 
+    public function getPreview() {
+        $moduleconf = $this->conf[$this->type];
+        $base_url = Director::baseURL();
+
+        if(array_key_exists("preview", $moduleconf)) {
+            return $moduleconf["preview"];
+        }
+        return;
+    }
+
     function getExtension($mimetype) {
         if(empty($mimetype)) return "";
         switch($mimetype)

@@ -72,8 +72,7 @@ $.get(baseurl+"editorconf", function(conf) {
     $("#sfb-edit-page").click(function(e) {
         e.preventDefault();
         $.get(baseurl+"edit", function(loadedform) {
-            fpb.getModal().showModal(loadedform, "Seiteneigenschaften", function() {
-            });
+            fpb.getModal().showModal(loadedform, "Seiteneigenschaften", false);
         });
     })
     // $("#sfb-new-page").click(function(e) {
@@ -94,9 +93,8 @@ $.get(baseurl+"editorconf", function(conf) {
 
     $("#sfb-new-page").click(function(e) {
         e.preventDefault();
-        $.get(baseurl+"edit", function(loadedform) {
-            fpb.getModal().showModal(loadedform, {}, "Seiteneigenschaften", function() {
-            });
+        $.get(baseurl+"add", function(loadedform) {
+            fpb.getModal().showModal(loadedform, "Neue Seite", false);
         });
     })
 
