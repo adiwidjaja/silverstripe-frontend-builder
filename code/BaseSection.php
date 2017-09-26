@@ -120,8 +120,9 @@ class BaseSection {
                             $image->write();
 
                             $realname = str_replace("load_", "", $name);
+                            $savename = str_replace("load_", "save_", $name);
                             unset($content->$name);
-                            $content->$realname = "image:".$image->ID;
+                            $content->$savename = "image:".$image->ID;
                         } else {
                             $file = new File(array(
                                 "Filename" => $relfilepath,
@@ -131,8 +132,9 @@ class BaseSection {
                             ));
                             $file->write();
                             $realname = str_replace("load_", "", $name);
+                            $savename = str_replace("load_", "save_", $name);
                             unset($content->$name);
-                            $content->$realname = "file:".$file->ID;
+                            $content->$savename = "file:".$file->ID;
                         }
                     }
                 }
@@ -201,14 +203,14 @@ class BaseSection {
                         $id = intval(str_replace("image:", "", $value));
                         $image = Image::get()->byId($id);
 
+                        $realname = str_replace("save_", "", $name);
 
-                        if($image_infos && isset($image_infos[$name])) {
-                            $info = $image_infos[$name];
+                        if($image_infos && isset($image_infos[$realname])) {
+                            $info = $image_infos[$realname];
                             $image = $image->getFormattedImage($info["method"], isset($info["width"])?$info["width"]:0, isset($info["height"])?$info["height"]:0);
                         }
 
-                        //Resize here
-                        $content->$name = $image->URL;
+                        $content->$realname = $image->URL;
                     }
                 }
             }
