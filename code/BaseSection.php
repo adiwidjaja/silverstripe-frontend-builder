@@ -31,6 +31,15 @@ class BaseSection {
         return new $class($type, $conf);
     }
 
+    public function getSize() {
+        $base_path = Director::baseFolder();
+        $moduleconf = $this->conf[$this->type];
+
+        if(array_key_exists("preview-size", $moduleconf))
+            return $moduleconf["preview-size"];
+        return "default";
+    }
+
     public function getTemplate() {
         $base_path = Director::baseFolder();
         $moduleconf = $this->conf[$this->type];

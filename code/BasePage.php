@@ -254,7 +254,8 @@ class BasePage_Controller extends ContentController {
                 "name" => $moduleconf["name"],
                 "template" => $template,
                 "formdef" => $formdef,
-                "preview" => $preview
+                "preview" => $preview,
+                "size" => $section->getSize()
             );
         }
         $this->getResponse()->addHeader('Content-Type', 'application/json');

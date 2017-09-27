@@ -15,17 +15,18 @@ $.get(baseurl+"editorconf", function(conf) {
         $("#save-status").removeClass("label-warning label-success").addClass("label-danger").text("Geändert");
 
         if(savetimeout) {
+            console.log("clear timeout");
             clearTimeout(savetimeout);
         }
 
 
         if(instantsave) {
-            saveContent();
-        } else {
-            console.log("Saving in 5sec");
+            // saveContent();
+            console.log("Saving in 0.5 sec");
             savetimeout = setTimeout(function() {
                 saveContent();
-            }, 5000);
+            }, 500);
+        } else {
         }
 
     });
