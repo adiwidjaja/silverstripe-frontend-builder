@@ -12,6 +12,7 @@ class News extends Page {
         "Title" => "Neue News"
     ];
     private static $allowed_children = [];
+    private static $default_sort = "Date DESC";
 
     /**
      * Sets the Date field to the current date.
@@ -26,7 +27,7 @@ class News extends Page {
         $fields->addFieldToTab("Root.Main", new DateField('Date','Datum'));
         $fields->addFieldToTab("Root.Main", new TextareaField('Description', 'Kurzbeschreibung'));
         // $fields->addFieldToTab("Root.Main", new TextField('Tags', 'Tags (comma seperated)'));
-        // $fields->addFieldToTab("Root.Main", new UploadField('Image'));
+        $fields->addFieldToTab("Root.Main", new UploadField('Image'));
         return $fields;
     }
 
@@ -34,7 +35,7 @@ class News extends Page {
         $fields = parent::EditFields();
         $fields->insertBefore('MetaTitle', new DateField('Date','Datum'));
         $fields->insertBefore('MetaTitle', new TextareaField('Description', 'Kurzbeschreibung') );
-        // $fields->insertBefore('MetaTitle', new UploadField('Image'));
+        $fields->insertBefore('MetaTitle', new UploadField('Image'));
         return $fields;
     }
 

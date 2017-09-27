@@ -220,8 +220,9 @@ class BaseSection {
                             if($image)
                                 $image = $image->getFormattedImage($info["method"], isset($info["width"])?$info["width"]:0, isset($info["height"])?$info["height"]:0);
                         }
-                        if($image)
+                        if($image) {
                             $content->$realname = $image->URL;
+                        }
                     }
                 }
             }
