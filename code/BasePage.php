@@ -10,8 +10,13 @@ class BasePage extends SiteTree {
     public function getCMSFields() {
         $fields = parent::getCMSFields();
         $fields->removeByName("Content");
-        $fields->addFieldToTab("Root.Main", new TextareaField("PageContent", "Inhalt"));
+        // $fields->addFieldToTab("Root.Main", new TextareaField("PageContent", "Inhalt"));
         // $fields->replaceField("Content", new TextareaField("PageContent", "Inhalt"));
+        $link = $this->Link();
+        // $fields->addFieldToTab("Root.Main", new LiteralField("Frontendlink", '<a href="'.$link.'?Stage=Stage" target="_blank">Frontend-Editor öffnen</a>'));
+        $fields->addFieldToTab("Root.Main", new LiteralField("Frontendlink", '<a href="'.$link.'?Stage=Stage" type="button" class="ss-ui-button edit ui-button ss-ui-action-constructive ui-widget ui-state-default ui-corner-all ui-button-text-only" role="button" aria-disabled="false" target="_blank"><span class="ui-button-text">
+            &gt; Frontend-Editor öffnen
+        </span></a>'));
         $this->extend('updateCMSFields', $fields);
         return $fields;
     }
