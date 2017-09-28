@@ -29,7 +29,7 @@ class BasePage extends SiteTree {
         $fields->push( new TextField( 'Title', $this->fieldLabel('Title') ) );
         $fields->push( new TextField( 'MenuTitle', $this->fieldLabel('MenuTitle') ) );
         $fields->push( new CheckboxField( 'ShowInMenus', $this->fieldLabel('ShowInMenus') ) );
-        $fields->push( new TextField( 'MetaTitle', $this->fieldLabel('MetaTitle') ) );
+        //$fields->push( new TextField( 'MetaTitle', $this->fieldLabel('MetaTitle') ) );
         $fields->push( new TextareaField( 'MetaDescription', $this->fieldLabel('MetaDescription') ) );
         return $fields;
     }
