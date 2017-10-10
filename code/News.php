@@ -1,7 +1,7 @@
 <?php
 class News extends Page {
     private static $db = [
-        "Date" => "Date",
+        "Date" => "Datetime",
         "Description" => "Text",
         "Tags" => "Text"
     ];
@@ -33,9 +33,9 @@ class News extends Page {
 
     function EditFields() {
         $fields = parent::EditFields();
-        $fields->insertBefore('MetaTitle', new DateField('Date','Datum'));
-        $fields->insertBefore('MetaTitle', new TextareaField('Description', 'Kurzbeschreibung') );
-        $fields->insertBefore('MetaTitle', new UploadField('Image'));
+        $fields->insertBefore('MetaDescription', new DateField('Date','Datum'));
+        $fields->insertBefore('MetaDescription', new TextareaField('Description', 'Kurzbeschreibung') );
+        $fields->insertBefore('MetaDescription', new UploadField('Image', 'Vorschaubild'));
         return $fields;
     }
 
