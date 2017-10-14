@@ -34,8 +34,8 @@
                     <% if CurrentVersion == Stage %>
                     <div class="save-status label" id="save-status">
                     </div>
-                    <a id="sfb-save-page" class="btn" href="javascript:;">Speichern</a>
-                    <a id="rollback-page" class="btn" href="$Link(rollback)">Änderungen verwerfen</a>
+                    <a id="sfb-save-page" class="btn btn-link" href="javascript:;">Speichern</a>
+                    <a id="rollback-page" class="btn btn-link" href="$Link(rollback)">Änderungen verwerfen</a>
                     <a id="publish-page" class="btn btn-primary" href="$Link(publish)">Veröffentlichen</a>
                     <% end_if %>
                 </div>
