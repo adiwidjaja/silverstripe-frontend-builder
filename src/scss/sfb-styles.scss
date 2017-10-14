@@ -25,6 +25,16 @@ $white_trans:rgba($white, 0.5);
     }
 }
 
+.fpb .btn {
+    float:none;
+    text-transform:none;
+    margin-top:0;
+    letter-spacing:0;
+    &:after {
+        display:none; // Remove theme arrows
+    }
+}
+
 .sfb-nav {
     position:fixed;
     top:0;
