@@ -9,5 +9,8 @@
         }
     ],
     "minimum-stability": "dev",
-    "require": {}
+    "require": {
+        "unclecheese/bootstrap-forms": "^1.2",
+        "evought/data-uri": "^1.0"
+    }
 }
