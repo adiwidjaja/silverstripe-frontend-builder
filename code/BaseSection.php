@@ -14,7 +14,6 @@ class BaseSection {
     //Needs conf to create subobjects
     public static function create($section, $conf) {
         $class = "BaseSection";
-
         if(array_key_exists("class", $conf[$section->type])) {
             $class = $conf[$section->type]["class"];
         }

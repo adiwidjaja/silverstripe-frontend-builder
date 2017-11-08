@@ -5,9 +5,12 @@ import $ from "jquery";
 
 $.get(baseurl+"editorconf", function(conf) {
     let savetimeout = null;
-    let editordata = JSON.parse(content);
-    const editform = conf.editform;
-    const pagedata = conf.pagedata;
+    let contentjson = JSON.parse(content);
+    let saving = false;
+
+    if(!contentjson.sections)
+        contentjson.sections = [];
+    let editordata = contentjson.sections;
 
     const fpb = new FrontendPageBuilder(function(neweditordata, instantsave) {
         editordata = neweditordata;
@@ -15,14 +18,13 @@ $.get(baseurl+"editorconf", function(conf) {
         $("#save-status").removeClass("label-warning label-success").addClass("label-danger").text("Geändert");
 
         if(savetimeout) {
-            console.log("clear timeout");
+            // console.log("clear timeout");
             clearTimeout(savetimeout);
         }
 
 
         if(instantsave) {
-            // saveContent();
-            console.log("Saving in 0.5 sec");
+            // console.log("Saving in 0.5 sec");
             savetimeout = setTimeout(function() {
                 saveContent();
             }, 500);
@@ -38,12 +40,18 @@ $.get(baseurl+"editorconf", function(conf) {
         const data = {
             'PageContent': content
         };
+        if(saving)
+            return;
         if(savetimeout) {
             clearTimeout(savetimeout);
         }
         $("#save-status").removeClass("label-danger label-success").addClass("label-warning").text("Speichert...");
+        saving = true;
+
         $.post(baseurl+"savecontent", data, function(feedback) {
-            fpb.setContent(JSON.parse(feedback));
+            saving = false;
+            const contentjson = JSON.parse(feedback);
+            fpb.setContent(contentjson.sections);
             // alert("Ok");
             $("#save-status").removeClass("label-danger label-warning").addClass("label-success").text("Gespeichert");
         }, "json");
@@ -56,6 +64,7 @@ $.get(baseurl+"editorconf", function(conf) {
         saveContent();
     })
 
+    // JSON based forms?
     // $("#sfb-edit-page").click(function(e) {
     //     e.preventDefault();
     //     fpb.getModal().showForm(editform, pagedata, "Seiteneigenschaften", function(formdata) {
