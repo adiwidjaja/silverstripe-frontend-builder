@@ -1,11 +1,39 @@
 <?php
 class BasePage extends SiteTree {
     private static $db = [
-        "PageContent" => "Text"
+        "PageContent" => "Text",
+        "ShowTranslations" => "Varchar(255)"
     ];
     private static $defaults = [
         "Title" => "Neue Unterseite"
     ];
+    private static $translate = [
+        'PageContent',
+    ];
+    public function populateDefaults() {
+        parent::populateDefaults();
+        $languages = $this->Locales()->column("Language");
+        $this->ShowTranslations = implode(",", $languages);
+        return $this;
+    }
+
+    public function HasTranslations() {
+        foreach($this->Locales() as $locale) {
+            if($locale->LinkingMode != "current" && $locale->LinkingMode != "invalid")
+                return true;
+        }
+    }
+
+    public function HasLanguage($locale) {
+        $lang = substr($locale, 0, 2);
+        return (strpos($this->ShowTranslations, $lang) !== false);
+    }
+
+    public function canViewInLocale($locale) {
+        if($this->CanEdit())
+            return true;
+        return $this->HasLanguage($locale);
+    }
 
     public function getCMSFields() {
         $fields = parent::getCMSFields();
@@ -17,6 +45,10 @@ class BasePage extends SiteTree {
         $fields->addFieldToTab("Root.Main", new LiteralField("Frontendlink", '<a href="'.$link.'?Stage=Stage" type="button" class="ss-ui-button edit ui-button ss-ui-action-constructive ui-widget ui-state-default ui-corner-all ui-button-text-only" role="button" aria-disabled="false" target="_blank"><span class="ui-button-text">
             &gt; Frontend-Editor öffnen
         </span></a>'));
+
+        $languages = $this->Locales()->map("Language", "Title");
+        $fields->addFieldToTab("Root.Main", new CheckboxSetField( 'ShowTranslations', $this->fieldLabel('ShowInMenus'), $languages ));
+
         $this->extend('updateCMSFields', $fields);
         return $fields;
     }
@@ -33,7 +65,9 @@ class BasePage extends SiteTree {
         $fields = new FieldList();
         $fields->push( new TextField( 'Title', $this->fieldLabel('Title') ) );
         $fields->push( new TextField( 'MenuTitle', $this->fieldLabel('MenuTitle') ) );
-        $fields->push( new CheckboxField( 'ShowInMenus', $this->fieldLabel('ShowInMenus') ) );
+//        $fields->push( new CheckboxField( 'ShowInMenus', $this->fieldLabel('ShowInMenus') ) );
+        $languages = $this->Locales()->map("Language", "Title");
+        $fields->push( new CheckboxSetField( 'ShowTranslations', $this->fieldLabel('ShowInMenus'), $languages ) );
         //$fields->push( new TextField( 'MetaTitle', $this->fieldLabel('MetaTitle') ) );
         $fields->push( new TextareaField( 'MetaDescription', $this->fieldLabel('MetaDescription') ) );
         return $fields;
@@ -317,6 +351,16 @@ class BasePage_Controller extends ContentController {
     function add() {
         $template = SSViewer::fromString("\$Form");
         return $this->renderWith($template, [ "Form" => $this->AddForm() ]);
+    }
+
+    public function Menu($level) {
+        $menu = $this->getMenu($level);
+        if($this->CanEdit()) return $menu;
+        $currentLocale = $this->CurrentLocale();
+        $menu = $menu->filterByCallback(function($item, $list) use ($currentLocale){
+            return $item->hasLanguage($currentLocale);
+        });
+        return $menu;
     }
 
 }
