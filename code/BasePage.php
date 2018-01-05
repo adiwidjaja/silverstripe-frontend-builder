@@ -17,6 +17,29 @@ class BasePage extends SiteTree {
         return $this;
     }
 
+    function RenderSection($section, $conf) {
+        return BaseSection::create($section, $conf)->render();
+    }
+
+    function RenderContent() {
+        $conf = Config::inst()->get("silverstripe-frontend-builder", "modules");
+        $content = json_decode($this->PageContent);
+        if(!$content || !$content->sections) {
+            return "";
+        } else {
+            $result = "";
+            foreach($content->sections as $section) {
+                $rendered = $this->RenderSection($section, $conf);
+                $result.=$rendered;
+            }
+        }
+        return $result;
+    }
+
+    public function PageContentText() {
+        return $this->RenderContent();
+    }
+
     public function HasTranslations() {
         foreach($this->Locales() as $locale) {
             if($locale->LinkingMode != "current" && $locale->LinkingMode != "invalid")
@@ -111,10 +134,6 @@ class BasePage_Controller extends ContentController {
         $this->redirect("Security/login");
     }
 
-    function RenderSection($section, $conf) {
-        return BaseSection::create($section, $conf)->render();
-    }
-
     //Apply pre-render hooks
     function PrepareSection($section) {
         $conf = Config::inst()->get("silverstripe-frontend-builder", "modules");
@@ -122,20 +141,6 @@ class BasePage_Controller extends ContentController {
         return $section;
     }
 
-    function RenderContent() {
-        $conf = Config::inst()->get("silverstripe-frontend-builder", "modules");
-        $content = json_decode($this->PageContent);
-        if(!$content || !$content->sections) {
-            return "";
-        } else {
-            $result = "";
-            foreach($content->sections as $section) {
-                $rendered = $this->RenderSection($section, $conf);
-                $result.=$rendered;
-            }
-        }
-        return $result;
-    }
 
     function prepareJsonContent($content) {
         $content = json_decode($content);
