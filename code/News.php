@@ -33,6 +33,7 @@ class News extends Page {
 
     function EditFields() {
         $fields = parent::EditFields();
+        $fields->removeByName("ClassName");
         $fields->insertBefore('MetaDescription', new DateField('Date','Datum'));
         $fields->insertBefore('MetaDescription', new TextareaField('Description', 'Kurzbeschreibung') );
         $fields->insertBefore('MetaDescription', new UploadField('Image', 'Vorschaubild'));

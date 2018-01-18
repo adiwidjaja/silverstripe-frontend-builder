@@ -17,6 +17,12 @@ class BasePage extends SiteTree {
         return $this;
     }
 
+    public function getFrontEndPageTypes() {
+        return [
+            "Page" => "Seite"
+        ];
+    }
+
     function RenderSection($section, $conf) {
         return BaseSection::create($section, $conf)->render();
     }
@@ -86,6 +92,7 @@ class BasePage extends SiteTree {
 
     function EditFields() {
         $fields = new FieldList();
+        $fields->push( new DropdownField( 'ClassName', $this->fieldLabel('ClassName'), $this->getFrontEndPageTypes()));
         $fields->push( new TextField( 'Title', $this->fieldLabel('Title') ) );
         $fields->push( new TextField( 'MenuTitle', $this->fieldLabel('MenuTitle') ) );
 //        $fields->push( new CheckboxField( 'ShowInMenus', $this->fieldLabel('ShowInMenus') ) );
