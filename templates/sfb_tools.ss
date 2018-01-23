@@ -26,9 +26,9 @@
                     <% if $NewChildClass == "News" %>
                         <a class="btn btn-default" href="#" id="sfb-new-page">Neue News</a>
                     <% end_if %>
-                    <%--<% if $NewChildClass == "Event" %>--%>
-                        <%--<a class="btn btn-default" href="#" id="sfb-new-page">Neue Veranstaltung</a>--%>
-                    <%--<% end_if %>--%>
+                    <% if $NewChildClass == "Event" %>
+                        <a class="btn btn-default" href="#" id="sfb-new-page">Neue Veranstaltung</a>
+                    <% end_if %>
                 </div>
                 <div class="sfb-publishing">
                     <% if CurrentVersion == Stage %>
