@@ -144,8 +144,9 @@ class BasePage_Controller extends ContentController {
 
     //Apply pre-render hooks
     function PrepareSection($section) {
+        $lang = $this->CurrentLanguage();
         $conf = Config::inst()->get("silverstripe-frontend-builder", "modules");
-        $section->content = BaseSection::create($section, $conf)->beforeRender($section->content, true);
+        $section->content = BaseSection::create($section, $conf, array("lang$lang" => true))->beforeRender($section->content, true);
         return $section;
     }
 
