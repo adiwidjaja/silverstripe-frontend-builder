@@ -24,7 +24,8 @@ class BasePage extends SiteTree {
     }
 
     function RenderSection($section, $conf) {
-        return BaseSection::create($section, $conf)->render();
+        $lang = $this->CurrentLanguage();
+        return BaseSection::create($section, $conf, array("lang$lang" => true))->render();
     }
 
     function RenderContent() {
@@ -66,7 +67,7 @@ class BasePage extends SiteTree {
 
     public function getCMSFields() {
         $fields = parent::getCMSFields();
-        $fields->removeByName("Content");
+        $fields->replaceField("Content", new LiteralField("Content", ""));
         // $fields->addFieldToTab("Root.Main", new TextareaField("PageContent", "Inhalt"));
         // $fields->replaceField("Content", new TextareaField("PageContent", "Inhalt"));
         $link = $this->Link();

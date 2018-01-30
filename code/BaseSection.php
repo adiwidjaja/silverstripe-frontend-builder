@@ -4,20 +4,21 @@ use EVought\DataUri\DataUri;
 
 class BaseSection {
 
-    public function __construct($type, $conf, $section=null) {
+    public function __construct($type, $conf, $section=null, $extra=array()) {
         $this->type = $type;
         $this->section = $section;
         $this->conf = $conf;
+        $this->extra = $extra;
     }
 
     //Abstract factory
     //Needs conf to create subobjects
-    public static function create($section, $conf) {
+    public static function create($section, $conf, $extra=array()) {
         $class = "BaseSection";
         if(array_key_exists("class", $conf[$section->type])) {
             $class = $conf[$section->type]["class"];
         }
-        return new $class($section->type, $conf, $section);
+        return new $class($section->type, $conf, $section, $extra);
     }
 
     //Create without instance
@@ -242,6 +243,7 @@ class BaseSection {
 
         $subsection_names = [];
         $section = $this->section;
+        $extra = $this->extra;
         $conf = $this->conf;
         //Subsections
 
@@ -250,7 +252,7 @@ class BaseSection {
             $subsection_names[] = $name;
             if($prepareChildren) {
                 foreach($listcontent as $subsection) {
-                     $subsection->content = BaseSection::create($subsection, $conf)->beforeRender($subsection->content);
+                     $subsection->content = BaseSection::create($subsection, $conf, $extra)->beforeRender($subsection->content);
                      $preparedlist[] = $subsection;
                 }
             }
@@ -258,6 +260,8 @@ class BaseSection {
         }
 
         $content = $this->renderImages($content, $subsection_names);
+
+        $content = (object) array_merge((array) $content, $extra);
 
         return $content;
     }
