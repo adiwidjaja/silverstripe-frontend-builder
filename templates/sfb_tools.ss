@@ -40,9 +40,14 @@
                     <% end_if %>
                 </div>
             <% else %>
-                <div class="btn-group" role="group">
-                <a class="btn btn-default" href="$Link?stage=Stage">Bearbeitungsversion</a>
-                <span class="btn btn-info">Live-Version</span>
+                <div class="sfb-stages">
+                    <a class="sfb-logo" href="{$BaseAdminLink}/admin/pages/edit/show/$ID" target="_blank">
+                        CMS
+                    </a>&nbsp;
+                    <div class="btn-group" role="group">
+                        <a class="btn btn-default" href="$Link?stage=Stage">Bearbeitungsversion</a>
+                        <span class="btn btn-info">Live-Version</span>
+                    </div>
                 </div>
             <% end_if %>
         </div>
