@@ -176,7 +176,7 @@ class BasePage_Controller extends ContentController {
         $item = $this->data();
         $item->doPublish();
 
-        $this->redirect($this->Link()."?stage=Live");
+        $this->redirect($this->getAbsoluteLiveLink());
     }
 
     function performRollback($class, $id, $version) {
