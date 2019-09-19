@@ -51,5 +51,5 @@
                 </div>
             <% end_if %>
         </div>
-        <script src="silverstripe-frontend-builder/js/sfb.js"></script>
+        <script src="silverstripe-frontend-builder/js/sfb.js?v=2"></script>
         <% end_if %>

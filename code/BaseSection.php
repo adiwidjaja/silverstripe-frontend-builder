@@ -262,7 +262,6 @@ class BaseSection {
         $content = $this->renderImages($content, $subsection_names);
 
         $content = (object) array_merge((array) $content, $extra);
-
         return $content;
     }
 

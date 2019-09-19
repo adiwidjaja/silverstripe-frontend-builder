@@ -25,7 +25,8 @@ class BasePage extends SiteTree {
 
     function RenderSection($section, $conf) {
         $lang = $this->CurrentLanguage();
-        return BaseSection::create($section, $conf, array("lang$lang" => true))->render();
+        $notlang = $lang=="de"?"en":"de";
+        return BaseSection::create($section, $conf, array("lang$lang" => true, "lang$notlang" => false))->render();
     }
 
     function RenderContent() {
